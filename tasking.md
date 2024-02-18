@@ -1,6 +1,7 @@
 ## 02-18
 
-- [ ] component construction | constructor injection
+- [x] component construction | constructor injection | no args construction
+- [ ] convert to BDD assertions
 - [x] init local & remote repo
 
 ## Backlog
