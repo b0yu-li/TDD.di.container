@@ -1,7 +1,7 @@
 ## 02-18
 
 - [ ] component construction | constructor injection
-- [ ] init local & remote repo
+- [x] init local & remote repo
 
 ## Backlog
 
