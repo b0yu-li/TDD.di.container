@@ -3,7 +3,7 @@ package org.boyu;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ContainerUnitTest {
 
@@ -22,7 +22,7 @@ public class ContainerUnitTest {
             context.bind(Component.class, instance);
 
             // then
-            assertSame(instance, context.get(Component.class));
+            assertThat(context.get(Component.class)).isEqualTo(instance);
         }
         // TODO:    - w/ dependency:
         // TODO:        - one-level dep, e.g. A -depends-on-> B
