@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 public class ContainerUnitTest {
 
     @Nested
-    public class ComponentConstruction {
+    class ComponentConstruction {
         // TODO: bind instance
         // TODO: - constructor injection
         @Test
