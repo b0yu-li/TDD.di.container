@@ -21,7 +21,6 @@ public class ContainerUnitTest {
             void should_bind_type_to_a_class_with_default_constructor() {
                 // given
                 final Context context = new Context();
-                final ComponentWithDefaultConstructor instance = new ComponentWithDefaultConstructor();
 
                 // when
                 context.bind(Component.class, ComponentWithDefaultConstructor.class);
