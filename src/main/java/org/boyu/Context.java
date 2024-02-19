@@ -6,11 +6,11 @@ import java.util.Map;
 public class Context {
     private Map<Class<?>, Object> components = new HashMap<>();
 
-    public <ComponentType> void bind(Class<ComponentType> componentClass, ComponentType instance) {
+    public <T> void bind(Class<T> componentClass, T instance) {
         components.put(componentClass, instance);
     }
 
-    public <ComponentType> ComponentType get(Class<ComponentType> type) {
-        return (ComponentType) components.get(type);
+    public <T> T get(Class<T> type) {
+        return (T) components.get(type);
     }
 }
