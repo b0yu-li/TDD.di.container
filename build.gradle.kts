@@ -10,6 +10,10 @@ repositories {
 }
 
 dependencies {
+    // JSR 330
+    implementation("jakarta.inject:jakarta.inject-api:2.0.0")
+    annotationProcessor("org.glassfish:javax.annotation:10.0-b28")
+
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
