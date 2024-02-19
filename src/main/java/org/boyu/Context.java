@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Context {
-    private Map<Object, Object> components = new HashMap<>();
+    private Map<Class<?>, Object> components = new HashMap<>();
 
     public <ComponentType> void bind(Class<ComponentType> componentClass, ComponentType instance) {
         components.put(componentClass, instance);
