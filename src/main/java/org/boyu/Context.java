@@ -10,7 +10,7 @@ public class Context {
         components.put(componentClass, instance);
     }
 
-    public <T, U> void bind(Class<T> type, Class<U> componentWithDefaultConstructorClass) {
+    public <T, U extends T> void bind(Class<T> type, Class<U> componentWithDefaultConstructorClass) {
         try {
             components.put(type, componentWithDefaultConstructorClass.getConstructor().newInstance());
         } catch (Exception e) {
