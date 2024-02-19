@@ -9,7 +9,7 @@ public class Context {
     private Map<Class<?>, Provider<?>> components = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
-        components.put(type, (Provider<T>) () -> instance);
+        components.put(type, () -> instance);
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> componentWithDefaultConstructorClass) {
