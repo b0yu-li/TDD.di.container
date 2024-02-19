@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Context {
-    private Map<Class<Component>, Component> components = new HashMap<>();
+    private Map<Object, Object> components = new HashMap<>();
 
-    public void bind(Class<Component> componentClass, Component instance) {
+    public <ComponentType> void bind(Class<ComponentType> componentClass, ComponentType instance) {
         components.put(componentClass, instance);
     }
 
-    public Component get(Class<Component> componentClass) {
-        return components.get(componentClass);
+    public <ComponentType> ComponentType get(Class<ComponentType> type) {
+        return (ComponentType) components.get(type);
     }
 }
