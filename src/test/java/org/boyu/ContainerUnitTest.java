@@ -14,9 +14,25 @@ public class ContainerUnitTest {
 
     @Nested
     class ComponentConstruction {
-        // TODO: bind instance
         @Nested
-        class ConstructorInjection {
+        class BindTypeToInstance {
+            @Test
+            void should_bind_type_to_a_specific_instance() {
+                // given
+                Context context = new Context();
+                Component instance = new Component() {
+                };
+
+                // when
+                context.bind(Component.class, instance);
+
+                // then
+                assertThat(context.get(Component.class)).isEqualTo(instance);
+            }
+        }
+
+        @Nested
+        class BindTypeToClass {
             @Test
             void should_bind_type_to_a_class_with_default_constructor() {
                 // given
@@ -31,29 +47,6 @@ public class ContainerUnitTest {
                 assertThat(actual).isInstanceOf(ComponentWithDefaultConstructor.class);
             }
         }
-
-        @Test
-        void should_bind_type_to_a_specific_instance() {
-            // given
-            Context context = new Context();
-            Component instance = new Component() {
-            };
-
-            // when
-            context.bind(Component.class, instance);
-
-            // then
-            assertThat(context.get(Component.class)).isEqualTo(instance);
-        }
-        // TODO:    - w/ dependency:
-        // TODO:        - one-level dep, e.g. A -depends-on-> B
-        // TODO:        - multi-level dep, e.g. A -depends-on-> B -> C
-        // TODO: - field injection
-        // TODO: - method injection
-
-        // TODO: bind abstract class
-
-        // TODO: bind interface
     }
 
     @Nested
