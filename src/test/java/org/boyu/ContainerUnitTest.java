@@ -66,6 +66,25 @@ public class ContainerUnitTest {
                 assertThat(((ComponentWithInjectConstructor) actual).getDependency())
                         .isEqualTo(dependency);
             }
+
+            @Test
+            void should_bind_type_to_a_class_with_inject_constructor_with_transitive_dependencies() {
+                // given
+                context.bind(Dependency.class, DependencyWithInjectorConstructor.class);
+                context.bind(String.class, "indirect dependency");
+
+                // when
+                context.bind(Component.class, ComponentWithInjectConstructor.class);
+
+                // then
+                final Component instance = context.get(Component.class);
+                assertThat(instance).isNotNull();
+                final Dependency dependency = ((ComponentWithInjectConstructor) instance).getDependency();
+                assertThat(dependency).isNotNull();
+                final String innerDependency = ((DependencyWithInjectorConstructor) dependency).getDependency();
+                assertThat(innerDependency).isNotNull().isEqualTo("indirect dependency");
+            }
+
         }
     }
 
