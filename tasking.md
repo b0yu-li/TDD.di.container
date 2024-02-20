@@ -2,7 +2,8 @@
 
 - [x] component construction | constructor injection | inject constructor (one-level dependency)
 - [x] component construction | constructor injection | transitive dependency
-- [ ] component construction | constructor injection | sad | multi inject constructors
+- [x] component construction | constructor injection | sad | multi inject constructors
+- [ ] make `IllegalComponentException` an Enum
 - [ ] component construction | constructor injection | sad | no default nor inject constructors
 - [ ] component construction | constructor injection | sad | dependencies of constructor non-existent
 

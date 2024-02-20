@@ -2,11 +2,13 @@ package org.boyu;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.boyu.exception.IllegalComponentException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Context {
@@ -17,6 +19,13 @@ public class Context {
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
+        final List<Constructor<?>> injectConstructors = Arrays.stream(impl.getConstructors())
+                .filter(it -> it.isAnnotationPresent(Inject.class))
+                .toList();
+        if (injectConstructors.size() > 1) {
+            throw new IllegalComponentException();
+        }
+
         components.put(type, () -> {
             try {
                 final Constructor<U> constructor = getConstructor(impl);
