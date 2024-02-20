@@ -1,6 +1,6 @@
 ## 02-20
 
-- [ ] xxx
+- [ ] component construction | constructor injection | inject constructor
 
 ## 02-19
 

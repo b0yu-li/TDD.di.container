@@ -47,6 +47,25 @@ public class ContainerUnitTest {
                         .isNotNull()
                         .isInstanceOf(ComponentWithDefaultConstructor.class);
             }
+
+            @Test
+            void should_bind_type_to_a_class_with_inject_constructor() {
+                // given
+                final Dependency dependency = new Dependency() {
+                };
+                context.bind(Dependency.class, dependency);
+
+                // when
+                context.bind(Component.class, ComponentWithInjectConstructor.class);
+
+                // then
+                final Component actual = context.get(Component.class);
+                assertThat(actual)
+                        .isNotNull()
+                        .isInstanceOf(ComponentWithInjectConstructor.class);
+                assertThat(((ComponentWithInjectConstructor) actual).getDependency())
+                        .isEqualTo(dependency);
+            }
         }
     }
 
