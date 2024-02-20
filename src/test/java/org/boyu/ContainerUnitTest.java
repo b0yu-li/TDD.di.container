@@ -98,6 +98,13 @@ public class ContainerUnitTest {
                             .hasMessageContaining("cannot have multi @Inject constructors");
                 }
 
+                @Test
+                void should_throw_exception_when_bind_given_no_inject_nor_default_constructor() {
+                    // when + then
+                    assertThatThrownBy(() -> context.bind(Component.class, ComponentWithNoInjectNorDefaultConstructor.class))
+                            .isInstanceOf(IllegalComponentException.class)
+                            .hasMessageContaining("cannot have multi @Inject constructors");
+                }
             }
         }
 
@@ -108,6 +115,11 @@ public class ContainerUnitTest {
 
             @Inject
             public ComponentWithMultiInjectConstructors(String dep1, String dep2) {
+            }
+        }
+
+        class ComponentWithNoInjectNorDefaultConstructor implements Component {
+            public ComponentWithNoInjectNorDefaultConstructor(String dep1) {
             }
         }
     }

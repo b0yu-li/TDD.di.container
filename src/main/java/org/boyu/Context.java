@@ -26,6 +26,16 @@ public class Context {
             throw new IllegalComponentException();
         }
 
+        final boolean doesHaveDefaultConstructor = Arrays.stream(impl.getConstructors())
+                .filter(c -> 0 == c.getParameters().length)
+                .findFirst()
+                .map(c -> true)
+                .orElse(false);
+        if (injectConstructors.isEmpty() && !doesHaveDefaultConstructor) {
+            throw new IllegalComponentException();
+        }
+
+
         components.put(type, () -> {
             try {
                 final Constructor<U> constructor = getConstructor(impl);
