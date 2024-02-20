@@ -1,6 +1,7 @@
 ## 02-20
 
-- [ ] component construction | constructor injection | inject constructor
+- [x] component construction | constructor injection | inject constructor (one-level dependency)
+- [ ] component construction | constructor injection | transitive dependency
 
 ## 02-19
 
