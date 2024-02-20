@@ -1,7 +1,10 @@
 ## 02-20
 
 - [x] component construction | constructor injection | inject constructor (one-level dependency)
-- [ ] component construction | constructor injection | transitive dependency
+- [x] component construction | constructor injection | transitive dependency
+- [ ] component construction | constructor injection | sad | multi inject constructors
+- [ ] component construction | constructor injection | sad | no default nor inject constructors
+- [ ] component construction | constructor injection | sad | dependencies of constructor non-existent
 
 ## 02-19
 
