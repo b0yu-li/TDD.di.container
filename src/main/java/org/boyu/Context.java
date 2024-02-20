@@ -53,12 +53,11 @@ public class Context {
 
 
     public <T> T get(Class<T> type) {
-        if (!components.containsKey(type)) throw new DependencyNotFoundException();
-
-        return (T) components.get(type).get();
+        return get_(type).orElseThrow(DependencyNotFoundException::new);
     }
 
     public <T> Optional<T> get_(Class<T> typeKey) {
-        return Optional.ofNullable((T) components.get(typeKey));
+        return Optional.ofNullable(components.get(typeKey))
+                .map(it -> (T) it.get());
     }
 }
