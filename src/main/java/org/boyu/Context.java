@@ -4,12 +4,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Context {
-    private Map<Class<?>, Provider<?>> components = new HashMap<>();
+    private final Map<Class<?>, Provider<?>> components = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
         components.put(type, () -> instance);
@@ -20,10 +21,8 @@ public class Context {
             try {
                 final Constructor<U> constructor = getConstructor(impl);
                 final Object[] objects = Arrays.stream(constructor.getParameters())
-                        .map(p -> p.getType())
-                        .map(t -> {
-                            return get(t);
-                        })
+                        .map(Parameter::getType)
+                        .map(this::get)
                         .toArray();
                 return constructor.newInstance(objects);
             } catch (Exception e) {
@@ -32,7 +31,7 @@ public class Context {
         });
     }
 
-    private <U> Constructor<U> getConstructor(Class<U> impl) throws NoSuchMethodException {
+    private <U> Constructor<U> getConstructor(Class<U> impl) {
         return (Constructor<U>) Arrays.stream(impl.getConstructors())
                 .filter(c -> {
                     if (c.isAnnotationPresent(Inject.class)) {
