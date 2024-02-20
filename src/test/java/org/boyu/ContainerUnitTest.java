@@ -34,7 +34,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, instance);
 
                 // then
-                assertThat(context.get_(Component.class).get()).isEqualTo(instance);
+                assertThat(context.get(Component.class).get()).isEqualTo(instance);
             }
         }
 
@@ -48,7 +48,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, ComponentWithDefaultConstructor.class);
 
                 // then
-                final Component actual = context.get_(Component.class).get();
+                final Component actual = context.get(Component.class).get();
                 assertThat(actual)
                         .isNotNull()
                         .isInstanceOf(ComponentWithDefaultConstructor.class);
@@ -65,7 +65,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, ComponentWithInjectConstructor.class);
 
                 // then
-                final Component actual = context.get_(Component.class).get();
+                final Component actual = context.get(Component.class).get();
                 assertThat(actual)
                         .isNotNull()
                         .isInstanceOf(ComponentWithInjectConstructor.class);
@@ -83,7 +83,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, ComponentWithInjectConstructor.class);
 
                 // then
-                final Component instance = context.get_(Component.class).get();
+                final Component instance = context.get(Component.class).get();
                 assertThat(instance).isNotNull();
                 final Dependency dependency = ((ComponentWithInjectConstructor) instance).getDependency();
                 assertThat(dependency).isNotNull();
@@ -94,7 +94,7 @@ public class ContainerUnitTest {
             @Test
             void should_return_empty_when_get_given_component_undefined() {
                 // when
-                Optional<Component> component = context.get_(Component.class);
+                Optional<Component> component = context.get(Component.class);
 
                 // then
                 assertThat(component).isEmpty();
@@ -124,7 +124,7 @@ public class ContainerUnitTest {
                     context.bind(Component.class, ComponentWithInjectConstructor.class);
 
                     // when + then
-                    assertThatThrownBy(() -> context.get_(Component.class))
+                    assertThatThrownBy(() -> context.get(Component.class))
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
                 }
