@@ -20,6 +20,22 @@ public class Context {
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
+        final Constructor<U> constructor = getConstructor(impl);
+
+        components.put(type, () -> {
+            try {
+                final Object[] objects = Arrays.stream(constructor.getParameters())
+                        .map(Parameter::getType)
+                        .map(this::get)
+                        .toArray();
+                return constructor.newInstance(objects);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private <U> Constructor<U> getConstructor(Class<U> impl) {
         final List<Constructor<?>> injectConstructors = Arrays.stream(impl.getConstructors())
                 .filter(it -> it.isAnnotationPresent(Inject.class))
                 .toList();
@@ -36,29 +52,7 @@ public class Context {
             throw new IllegalComponentException();
         }
 
-
-        components.put(type, () -> {
-            try {
-                final Constructor<U> constructor = getConstructor(impl);
-                final Object[] objects = Arrays.stream(constructor.getParameters())
-                        .map(Parameter::getType)
-                        .map(this::get)
-                        .toArray();
-                return constructor.newInstance(objects);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private <U> Constructor<U> getConstructor(Class<U> impl) {
-        return (Constructor<U>) Arrays.stream(impl.getConstructors())
-                .filter(c -> {
-                    if (c.isAnnotationPresent(Inject.class)) {
-                        return true;
-                    }
-                    return false;
-                })
+        return (Constructor<U>) injectConstructors.stream()
                 .findFirst()
                 .orElseGet(() -> {
                     try {
