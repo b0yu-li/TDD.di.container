@@ -2,9 +2,11 @@ package org.boyu;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.boyu.exception.DependencyNotFoundException;
 import org.boyu.exception.IllegalComponentException;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class Context {
                         .map(this::get)
                         .toArray();
                 return constructor.newInstance(objects);
-            } catch (Exception e) {
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -54,6 +56,8 @@ public class Context {
 
 
     public <T> T get(Class<T> type) {
+        if (!components.containsKey(type)) throw new DependencyNotFoundException();
+
         return (T) components.get(type).get();
     }
 }

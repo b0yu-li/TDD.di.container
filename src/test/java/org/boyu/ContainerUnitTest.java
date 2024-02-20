@@ -1,6 +1,7 @@
 package org.boyu;
 
 import jakarta.inject.Inject;
+import org.boyu.exception.DependencyNotFoundException;
 import org.boyu.exception.IllegalComponentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -104,6 +105,17 @@ public class ContainerUnitTest {
                     assertThatThrownBy(() -> context.bind(Component.class, ComponentWithNoInjectNorDefaultConstructor.class))
                             .isInstanceOf(IllegalComponentException.class)
                             .hasMessageContaining("cannot have multi @Inject constructors");
+                }
+
+                @Test
+                void should_throw_exception_when_get_given_dependency_not_found() {
+                    // given
+                    context.bind(Component.class, ComponentWithInjectConstructor.class);
+
+                    // when + then
+                    assertThatThrownBy(() -> context.get(Component.class))
+                            .isInstanceOf(DependencyNotFoundException.class)
+                            .hasMessageContaining("cannot find dependency for given implementation");
                 }
             }
         }
