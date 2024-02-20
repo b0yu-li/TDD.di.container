@@ -1,10 +1,13 @@
 package org.boyu;
 
+import jakarta.inject.Inject;
+import org.boyu.exception.IllegalComponentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ContainerUnitTest {
     private Context context;
@@ -85,6 +88,27 @@ public class ContainerUnitTest {
                 assertThat(innerDependency).isNotNull().isEqualTo("indirect dependency");
             }
 
+            @Nested
+            class SadPath {
+                @Test
+                void should_throw_exception_when_bind_given_multi_inject_constructors() {
+                    // when + then
+                    assertThatThrownBy(() -> context.bind(Component.class, ComponentWithMultiInjectConstructors.class))
+                            .isInstanceOf(IllegalComponentException.class)
+                            .hasMessageContaining("cannot have multi @Inject constructors");
+                }
+
+            }
+        }
+
+        class ComponentWithMultiInjectConstructors implements Component {
+            @Inject
+            public ComponentWithMultiInjectConstructors(String dep1) {
+            }
+
+            @Inject
+            public ComponentWithMultiInjectConstructors(String dep1, String dep2) {
+            }
         }
     }
 
