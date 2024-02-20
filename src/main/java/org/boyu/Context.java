@@ -2,7 +2,6 @@ package org.boyu;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import org.apache.commons.collections4.CollectionUtils;
 import org.boyu.exception.IllegalComponentException;
 
 import java.lang.reflect.Constructor;
@@ -39,18 +38,8 @@ public class Context {
         final List<Constructor<?>> injectConstructors = Arrays.stream(impl.getConstructors())
                 .filter(it -> it.isAnnotationPresent(Inject.class))
                 .toList();
-        if (injectConstructors.size() > 1) {
-            throw new IllegalComponentException();
-        }
 
-        final boolean doesHaveDefaultConstructor = Arrays.stream(impl.getConstructors())
-                .filter(c -> 0 == c.getParameters().length)
-                .findFirst()
-                .map(c -> true)
-                .orElse(false);
-        if (CollectionUtils.isEmpty(injectConstructors) && !doesHaveDefaultConstructor) {
-            throw new IllegalComponentException();
-        }
+        if (injectConstructors.size() > 1) throw new IllegalComponentException();
 
         return (Constructor<U>) injectConstructors.stream()
                 .findFirst()
@@ -58,7 +47,7 @@ public class Context {
                     try {
                         return impl.getConstructor();
                     } catch (NoSuchMethodException e) {
-                        throw new RuntimeException(e);
+                        throw new IllegalComponentException();
                     }
                 });
     }
