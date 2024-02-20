@@ -8,10 +8,7 @@ import org.boyu.exception.IllegalComponentException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Context {
     private final Map<Class<?>, Provider<?>> components = new HashMap<>();
@@ -59,5 +56,9 @@ public class Context {
         if (!components.containsKey(type)) throw new DependencyNotFoundException();
 
         return (T) components.get(type).get();
+    }
+
+    public <T> Optional<T> get_(Class<T> typeKey) {
+        return Optional.ofNullable((T) components.get(typeKey));
     }
 }

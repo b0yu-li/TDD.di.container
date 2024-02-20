@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -87,6 +89,15 @@ public class ContainerUnitTest {
                 assertThat(dependency).isNotNull();
                 final String innerDependency = ((DependencyWithInjectorConstructor) dependency).getDependency();
                 assertThat(innerDependency).isNotNull().isEqualTo("indirect dependency");
+            }
+
+            @Test
+            void should_return_empty_when_get_given_component_undefined() {
+                // when
+                Optional<Component> component = context.get_(Component.class);
+
+                // then
+                assertThat(component).isEmpty();
             }
 
             @Nested

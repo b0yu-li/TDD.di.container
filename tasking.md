@@ -6,6 +6,7 @@
 - [ ] make `IllegalComponentException` an Enum
 - [x] component construction | constructor injection | sad | no default nor inject constructors
 - [x] component construction | constructor injection | sad | dependencies of constructor non-existent
+- [x] component construction | constructor injection | sad | unregistered component
 
 ## 02-19
 
