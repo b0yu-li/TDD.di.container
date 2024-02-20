@@ -2,6 +2,7 @@ package org.boyu;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.apache.commons.collections4.CollectionUtils;
 import org.boyu.exception.IllegalComponentException;
 
 import java.lang.reflect.Constructor;
@@ -31,7 +32,7 @@ public class Context {
                 .findFirst()
                 .map(c -> true)
                 .orElse(false);
-        if (injectConstructors.isEmpty() && !doesHaveDefaultConstructor) {
+        if (CollectionUtils.isEmpty(injectConstructors) && !doesHaveDefaultConstructor) {
             throw new IllegalComponentException();
         }
 
