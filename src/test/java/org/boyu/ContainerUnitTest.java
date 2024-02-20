@@ -34,7 +34,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, instance);
 
                 // then
-                assertThat(context.get(Component.class)).isEqualTo(instance);
+                assertThat(context.get_(Component.class).orElseThrow(DependencyNotFoundException::new)).isEqualTo(instance);
             }
         }
 
@@ -48,7 +48,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, ComponentWithDefaultConstructor.class);
 
                 // then
-                final Component actual = context.get(Component.class);
+                final Component actual = context.get_(Component.class).orElseThrow(DependencyNotFoundException::new);
                 assertThat(actual)
                         .isNotNull()
                         .isInstanceOf(ComponentWithDefaultConstructor.class);
@@ -65,7 +65,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, ComponentWithInjectConstructor.class);
 
                 // then
-                final Component actual = context.get(Component.class);
+                final Component actual = context.get_(Component.class).orElseThrow(DependencyNotFoundException::new);
                 assertThat(actual)
                         .isNotNull()
                         .isInstanceOf(ComponentWithInjectConstructor.class);
@@ -83,7 +83,7 @@ public class ContainerUnitTest {
                 context.bind(Component.class, ComponentWithInjectConstructor.class);
 
                 // then
-                final Component instance = context.get(Component.class);
+                final Component instance = context.get_(Component.class).orElseThrow(DependencyNotFoundException::new);
                 assertThat(instance).isNotNull();
                 final Dependency dependency = ((ComponentWithInjectConstructor) instance).getDependency();
                 assertThat(dependency).isNotNull();
@@ -124,7 +124,7 @@ public class ContainerUnitTest {
                     context.bind(Component.class, ComponentWithInjectConstructor.class);
 
                     // when + then
-                    assertThatThrownBy(() -> context.get(Component.class))
+                    assertThatThrownBy(() -> context.get_(Component.class).orElseThrow(DependencyNotFoundException::new))
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
                 }

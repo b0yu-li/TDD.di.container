@@ -24,7 +24,7 @@ public class Context {
             try {
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
-                        .map(this::get)
+                        .map(type1 -> get_(type1).orElseThrow(DependencyNotFoundException::new))
                         .toArray();
                 return constructor.newInstance(objects);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
@@ -49,11 +49,6 @@ public class Context {
                         throw new IllegalComponentException();
                     }
                 });
-    }
-
-
-    public <T> T get(Class<T> type) {
-        return get_(type).orElseThrow(DependencyNotFoundException::new);
     }
 
     public <T> Optional<T> get_(Class<T> typeKey) {
