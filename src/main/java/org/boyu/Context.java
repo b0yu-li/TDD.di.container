@@ -20,17 +20,25 @@ public class Context {
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
         final Constructor<U> constructor = getConstructor(impl);
 
-        components.put(type, () -> {
-            try {
-                final Object[] objects = Arrays.stream(constructor.getParameters())
-                        .map(Parameter::getType)
-                        .map(typeKey -> get(typeKey).orElseThrow(DependencyNotFoundException::new))
-                        .toArray();
-                return constructor.newInstance(objects);
-            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        components.put(type, getProvider(constructor));
+    }
+
+    private <T, U extends T> Provider<Object> getProvider(Constructor<U> constructor) {
+        return () -> {
+            return theMethodInTheConcreteClass(constructor);
+        };
+    }
+
+    private <T, U extends T> U theMethodInTheConcreteClass(Constructor<U> constructor) {
+        try {
+            final Object[] objects = Arrays.stream(constructor.getParameters())
+                    .map(Parameter::getType)
+                    .map(typeKey -> get(typeKey).orElseThrow(DependencyNotFoundException::new))
+                    .toArray();
+            return constructor.newInstance(objects);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private <U> Constructor<U> getConstructor(Class<U> impl) {
