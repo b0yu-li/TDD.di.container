@@ -2,6 +2,7 @@ package org.boyu;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.boyu.exception.CyclicDependenciesFoundException;
 import org.boyu.exception.DependencyNotFoundException;
 import org.boyu.exception.IllegalComponentException;
 
@@ -28,6 +29,7 @@ public class Context {
     }
 
     class ConstructionInjectionProvider<U> implements Provider<U> {
+        private boolean constructing = false;
         private Constructor<U> constructor;
 
         public ConstructionInjectionProvider(Constructor<U> constructor) {
@@ -36,7 +38,10 @@ public class Context {
 
         @Override
         public U get() {
+            if (constructing) throw new CyclicDependenciesFoundException();
             try {
+                constructing = true;
+
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
                         .map(typeKey -> Context.this.get(typeKey).orElseThrow(DependencyNotFoundException::new))
@@ -44,6 +49,8 @@ public class Context {
                 return constructor.newInstance(objects);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
+            } finally {
+                constructing = false;
             }
         }
     }

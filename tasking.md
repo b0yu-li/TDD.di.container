@@ -1,6 +1,6 @@
 ## 02-21
 
-- [ ] component construction | constructor injection | sad | cyclic dependencies
+- [x] component construction | constructor injection | sad | cyclic dependencies
 
 ## 02-20
 
