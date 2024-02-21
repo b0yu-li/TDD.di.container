@@ -20,36 +20,17 @@ public class Context {
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
         final Constructor<U> constructor = getConstructor(impl);
 
-        components.put(type, getProvider(constructor));
-    }
-
-    private <U> Provider<Object> getProvider(Constructor<U> constructor) {
-        return new ConstructorInjectionProvider(constructor);
-    }
-
-    private <U> U getImplV1(Constructor<U> constructor) {
-        try {
-            final Object[] objects = Arrays.stream(constructor.getParameters())
-                    .map(Parameter::getType)
-                    .map(typeKey -> get(typeKey).orElseThrow(DependencyNotFoundException::new))
-                    .toArray();
-            return constructor.newInstance(objects);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public class ConstructorInjectionProvider<U> implements Provider<U> {
-        private Constructor<U> constructor;
-
-        public ConstructorInjectionProvider(Constructor<U> constructor) {
-            this.constructor = constructor;
-        }
-
-        @Override
-        public U get() {
-            return getImplV1(constructor);
-        }
+        components.put(type, () -> {
+            try {
+                final Object[] objects = Arrays.stream(constructor.getParameters())
+                        .map(Parameter::getType)
+                        .map(typeKey -> get(typeKey).orElseThrow(DependencyNotFoundException::new))
+                        .toArray();
+                return constructor.newInstance(objects);
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private <U> Constructor<U> getConstructor(Class<U> impl) {
