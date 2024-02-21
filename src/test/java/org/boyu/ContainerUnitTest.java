@@ -1,6 +1,7 @@
 package org.boyu;
 
 import jakarta.inject.Inject;
+import org.boyu.exception.CyclicDependenciesFoundException;
 import org.boyu.exception.DependencyNotFoundException;
 import org.boyu.exception.IllegalComponentException;
 import org.junit.jupiter.api.BeforeEach;
@@ -128,6 +129,18 @@ public class ContainerUnitTest {
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
                 }
+
+                @Test
+                void should_throw_exception_given_cyclic_dependencies_found() {
+                    // given
+                    context.bind(Component.class, ComponentWithInjectConstructor.class);
+                    context.bind(Dependency.class, DependentedOnDependency.class);
+
+                    // when + then
+                    assertThatThrownBy(() -> context.get(Component.class))
+                            .isInstanceOf(CyclicDependenciesFoundException.class)
+                            .hasMessageContaining("found cyclic dependencies which are not allowed");
+                }
             }
         }
 
@@ -143,6 +156,15 @@ public class ContainerUnitTest {
 
         class ComponentWithNoInjectNorDefaultConstructor implements Component {
             public ComponentWithNoInjectNorDefaultConstructor(String dep1) {
+            }
+        }
+
+        class DependentedOnDependency implements Dependency {
+            Component component;
+
+            @Inject
+            public DependentedOnDependency(Component component) {
+                this.component = component;
             }
         }
     }
