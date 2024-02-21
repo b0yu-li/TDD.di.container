@@ -23,11 +23,11 @@ public class Context {
         components.put(type, getProvider(constructor));
     }
 
-    private <T, U extends T> Provider<Object> getProvider(Constructor<U> constructor) {
+    private <U> Provider<U> getProvider(Constructor<U> constructor) {
         return new ConstructionInjectionProvider(constructor);
     }
 
-    private <T, U extends T> U theMethodInTheConcreteClass(Constructor<U> constructor) {
+    private <U> U theMethodInTheConcreteClass(Constructor<U> constructor) {
         try {
             final Object[] objects = Arrays.stream(constructor.getParameters())
                     .map(Parameter::getType)
