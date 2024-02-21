@@ -1,6 +1,5 @@
 package org.boyu;
 
-import jakarta.inject.Inject;
 import org.boyu.exception.CyclicDependenciesFoundException;
 import org.boyu.exception.DependencyNotFoundException;
 import org.boyu.exception.IllegalComponentException;
@@ -141,30 +140,6 @@ public class ContainerUnitTest {
                             .isInstanceOf(CyclicDependenciesFoundException.class)
                             .hasMessageContaining("found cyclic dependencies which are not allowed");
                 }
-            }
-        }
-
-        class ComponentWithMultiInjectConstructors implements Component {
-            @Inject
-            public ComponentWithMultiInjectConstructors(String dep1) {
-            }
-
-            @Inject
-            public ComponentWithMultiInjectConstructors(String dep1, String dep2) {
-            }
-        }
-
-        class ComponentWithNoInjectNorDefaultConstructor implements Component {
-            public ComponentWithNoInjectNorDefaultConstructor(String dep1) {
-            }
-        }
-
-        class DependentedOnDependency implements Dependency {
-            Component component;
-
-            @Inject
-            public DependentedOnDependency(Component component) {
-                this.component = component;
             }
         }
     }
