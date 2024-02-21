@@ -27,18 +27,6 @@ public class Context {
         return new ConstructionInjectionProvider(constructor);
     }
 
-    private <U> U theMethodInTheConcreteClass(Constructor<U> constructor) {
-        try {
-            final Object[] objects = Arrays.stream(constructor.getParameters())
-                    .map(Parameter::getType)
-                    .map(typeKey -> get(typeKey).orElseThrow(DependencyNotFoundException::new))
-                    .toArray();
-            return constructor.newInstance(objects);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     class ConstructionInjectionProvider<U> implements Provider<U> {
         private Constructor<U> constructor;
 
@@ -48,7 +36,15 @@ public class Context {
 
         @Override
         public U get() {
-            return theMethodInTheConcreteClass(constructor);
+            try {
+                final Object[] objects = Arrays.stream(constructor.getParameters())
+                        .map(Parameter::getType)
+                        .map(typeKey -> Context.this.get(typeKey).orElseThrow(DependencyNotFoundException::new))
+                        .toArray();
+                return constructor.newInstance(objects);
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
