@@ -24,9 +24,7 @@ public class Context {
     }
 
     private <T, U extends T> Provider<Object> getProvider(Constructor<U> constructor) {
-        return () -> {
-            return theMethodInTheConcreteClass(constructor);
-        };
+        return new ConstructionInjectionProvider(constructor);
     }
 
     private <T, U extends T> U theMethodInTheConcreteClass(Constructor<U> constructor) {
@@ -38,6 +36,19 @@ public class Context {
             return constructor.newInstance(objects);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    class ConstructionInjectionProvider<U> implements Provider<U> {
+        private Constructor<U> constructor;
+
+        public ConstructionInjectionProvider(Constructor<U> constructor) {
+            this.constructor = constructor;
+        }
+
+        @Override
+        public U get() {
+            return theMethodInTheConcreteClass(constructor);
         }
     }
 
