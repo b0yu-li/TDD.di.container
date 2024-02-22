@@ -37,3 +37,12 @@ class DependencyB implements Dependency {
     }
 
 }
+
+class DependencyBB implements Dependency {
+    Dependency dependency;
+
+    @Inject
+    public DependencyBB(Dependency dependency) {
+        this.dependency = dependency;
+    }
+}
