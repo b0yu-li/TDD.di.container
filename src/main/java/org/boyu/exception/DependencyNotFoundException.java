@@ -5,11 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public class DependencyNotFoundException extends RuntimeException {
-    private final String message;
-
     @Override
     public String getMessage() {
-        return message;
+        return Reason.NO_DEPENDENCY_FOUND.getValue();
     }
 
     @Getter
