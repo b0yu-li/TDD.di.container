@@ -24,17 +24,13 @@ public class Context {
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
         final Constructor<U> constructor = getConstructor(impl);
 
-        components.put(type, getProvider(type, constructor));
-    }
-
-    private <T, U extends T> Provider<U> getProvider(Class<T> type, Constructor<U> constructor) {
-        return new ConstructionInjectionProvider(type, constructor);
+        components.put(type, new ConstructionInjectionProvider(type, constructor));
     }
 
     class ConstructionInjectionProvider<U> implements Provider<U> {
         private boolean constructing = false;
-        private Class<?> componentType;
-        private Constructor<U> constructor;
+        private final Class<?> componentType;
+        private final Constructor<U> constructor;
 
         public ConstructionInjectionProvider(Class<?> componentType, Constructor<U> constructor) {
             this.componentType = componentType;
