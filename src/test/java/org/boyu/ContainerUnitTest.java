@@ -11,6 +11,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
+import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
 public class ContainerUnitTest {
     private Context context;
@@ -107,7 +109,7 @@ public class ContainerUnitTest {
                     // when + then
                     assertThatThrownBy(() -> context.bind(Component.class, ComponentWithMultiInjectConstructors.class))
                             .isInstanceOf(IllegalComponentException.class)
-                            .hasMessageContaining("cannot have multi @Inject constructors");
+                            .hasMessageContaining(MULTI_INJECT_CONSTRUCTORS.getValue());
                 }
 
                 @Test
@@ -115,7 +117,7 @@ public class ContainerUnitTest {
                     // when + then
                     assertThatThrownBy(() -> context.bind(Component.class, ComponentWithNoInjectNorDefaultConstructor.class))
                             .isInstanceOf(IllegalComponentException.class)
-                            .hasMessageContaining("cannot have multi @Inject constructors");
+                            .hasMessageContaining(NO_PROPER_CONSTRUCTOR_FOUND.getValue());
                 }
 
                 @Test

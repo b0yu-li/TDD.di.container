@@ -12,6 +12,7 @@ import java.lang.reflect.Parameter;
 import java.util.*;
 
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
+import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
 public class Context {
     private final Map<Class<?>, Provider<?>> components = new HashMap<>();
@@ -70,7 +71,7 @@ public class Context {
                     try {
                         return impl.getConstructor();
                     } catch (NoSuchMethodException e) {
-                        throw new IllegalComponentException(MULTI_INJECT_CONSTRUCTORS.getValue());
+                        throw new IllegalComponentException(NO_PROPER_CONSTRUCTOR_FOUND.getValue());
                     }
                 });
     }
