@@ -3,8 +3,11 @@ package org.boyu.exception;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class DependencyNotFoundException extends RuntimeException {
+    private final Class<?> dependencyType;
+
     @Override
     public String getMessage() {
         return Reason.NO_DEPENDENCY_FOUND.getValue();

@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
@@ -126,9 +125,11 @@ public class ContainerUnitTest {
                     context.bind(Component.class, ComponentWithInjectConstructor.class);
 
                     // when + then
-                    assertThatThrownBy(() -> context.get(Component.class))
+                    final Throwable exception = catchThrowable(() -> context.get(Component.class));
+                    assertThat(exception)
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
+                    assertThat(((DependencyNotFoundException) exception).getDependencyType()).isEqualTo(Dependency.class);
                 }
 
                 @Test
