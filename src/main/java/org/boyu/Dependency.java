@@ -13,3 +13,12 @@ class DependentedOnDependency implements Dependency {
         this.component = component;
     }
 }
+
+class DependencyB implements Dependency {
+    AnotherDependency anotherDependency;
+
+    public DependencyB(AnotherDependency anotherDependency) {
+        this.anotherDependency = anotherDependency;
+    }
+
+}

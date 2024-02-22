@@ -11,6 +11,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
+import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
+
 public class Context {
     private final Map<Class<?>, Provider<?>> components = new HashMap<>();
 
@@ -60,7 +62,7 @@ public class Context {
                 .filter(it -> it.isAnnotationPresent(Inject.class))
                 .toList();
 
-        if (injectConstructors.size() > 1) throw new IllegalComponentException();
+        if (injectConstructors.size() > 1) throw new IllegalComponentException(MULTI_INJECT_CONSTRUCTORS.getValue());
 
         return (Constructor<U>) injectConstructors.stream()
                 .findFirst()
@@ -68,7 +70,7 @@ public class Context {
                     try {
                         return impl.getConstructor();
                     } catch (NoSuchMethodException e) {
-                        throw new IllegalComponentException();
+                        throw new IllegalComponentException(MULTI_INJECT_CONSTRUCTORS.getValue());
                     }
                 });
     }

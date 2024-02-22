@@ -140,6 +140,19 @@ public class ContainerUnitTest {
                             .isInstanceOf(CyclicDependenciesFoundException.class)
                             .hasMessageContaining("found cyclic dependencies which are not allowed");
                 }
+
+                @Test
+                void should_throw_exception_given_transitive_cyclic_dependencies_found() {
+                    // given: A -> B -> C -> A
+                    context.bind(Component.class, ComponentWithInjectConstructor.class);
+                    context.bind(Dependency.class, DependencyB.class);
+                    context.bind(AnotherDependency.class, DependencyC.class);
+
+                    // when + then
+                    assertThatThrownBy(() -> context.get(Component.class))
+                            .isInstanceOf(CyclicDependenciesFoundException.class)
+                            .hasMessageContaining("found cyclic dependencies which are not allowed");
+                }
             }
         }
     }

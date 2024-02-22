@@ -1,3 +1,7 @@
+## 02-22
+
+- [ ] component construction | constructor injection | sad | transitive cyclic dependencies
+
 ## 02-21
 
 - [x] component construction | constructor injection | sad | cyclic dependencies
