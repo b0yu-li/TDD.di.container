@@ -1,11 +1,10 @@
 package org.boyu.exception;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class CyclicDependenciesFoundException extends RuntimeException {
-    private Set<Class<?>> componentTypes = new HashSet<>();
+    private List<Class<?>> componentTypes = new ArrayList<>();
 
     public CyclicDependenciesFoundException(Class<?> componentType) {
         this.componentTypes.add(componentType);
@@ -22,6 +21,6 @@ public class CyclicDependenciesFoundException extends RuntimeException {
     }
 
     public List<Class<?>> getComponentTypes() {
-        return componentTypes.stream().toList();
+        return componentTypes;
     }
 }

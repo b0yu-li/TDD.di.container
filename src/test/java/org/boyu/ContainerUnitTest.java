@@ -166,8 +166,8 @@ public class ContainerUnitTest {
 
                     final List<Class<?>> classes = exception.getComponentTypes();
                     assertThat(classes)
-                            .hasSize(2)
-                            .containsExactlyInAnyOrder(Component.class, Dependency.class);
+                            .hasSize(3)
+                            .containsExactlyInAnyOrder(Component.class, Dependency.class, Component.class);
                 }
 
                 @Test
@@ -186,8 +186,8 @@ public class ContainerUnitTest {
 
                     final List<Class<?>> classes = exception.getComponentTypes();
                     assertThat(classes)
-                            .hasSize(3)
-                            .containsExactlyInAnyOrder(Component.class, Dependency.class, AnotherDependency.class);
+                            .hasSize(4)
+                            .containsExactlyInAnyOrder(Component.class, Dependency.class, AnotherDependency.class, Component.class);
                 }
 
                 @Test
