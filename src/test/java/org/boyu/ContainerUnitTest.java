@@ -183,6 +183,11 @@ public class ContainerUnitTest {
 
                     final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
                     assertThat(exception).hasMessageContaining("found cyclic dependencies which are not allowed");
+
+                    final List<Class<?>> classes = exception.getComponentTypes();
+                    assertThat(classes)
+                            .hasSize(3)
+                            .containsExactlyInAnyOrder(Component.class, Dependency.class, AnotherDependency.class);
                 }
 
                 @Test
