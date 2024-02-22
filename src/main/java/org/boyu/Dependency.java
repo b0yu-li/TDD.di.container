@@ -5,6 +5,20 @@ import jakarta.inject.Inject;
 public interface Dependency {
 }
 
+class DependencyWithInjectorConstructor implements Dependency {
+    private String dependency;
+
+    @Inject
+    public DependencyWithInjectorConstructor(String dependency) {
+        this.dependency = dependency;
+    }
+
+    public String getDependency() {
+        return dependency;
+    }
+}
+
+
 class DependentedOnDependency implements Dependency {
     Component component;
 
