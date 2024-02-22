@@ -1,3 +1,9 @@
+## Bird View
+- [x] no need for the container to construct: instance
+- [ ] need for the container to construct: via constructor
+- [ ] need for the container to construct: via field injection
+- [ ] need for the container to construct: via method injection
+
 ## 02-22
 
 - [x] `DependencyNotFoundException` should tell which `Component` lacks which `Dependency`
