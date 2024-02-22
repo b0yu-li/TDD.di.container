@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
+import static org.boyu.exception.DependencyNotFoundException.Reason.NO_DEPENDENCY_FOUND;
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
@@ -47,7 +48,7 @@ public class Context {
 
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
-                        .map(typeKey -> Context.this.get(typeKey).orElseThrow(DependencyNotFoundException::new))
+                        .map(typeKey -> Context.this.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(NO_DEPENDENCY_FOUND.getValue())))
                         .toArray();
                 return constructor.newInstance(objects);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
