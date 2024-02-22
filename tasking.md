@@ -1,7 +1,6 @@
 ## 02-22
 
-- [ ] DependencyNotFoundException should give a detailed message
-    - [x] `DependencyNotFoundException` should tell which `Component` lacks which `Dependency`
+- [x] `DependencyNotFoundException` should tell which `Component` lacks which `Dependency`
 - [x] component construction | constructor injection | sad | transitive dependency not found
 - [x] component construction | constructor injection | sad | self cyclic dependencies
 - [x] component construction | constructor injection | sad | transitive cyclic dependencies
