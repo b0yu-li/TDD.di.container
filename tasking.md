@@ -7,7 +7,7 @@
 
 ## 02-22
 
-- [ ] tell which dep causes cyclic dep
+- [ ] ~~tell which dep causes cyclic dep~~ tell which components are involved in a CyclicDependenciesFoundException
 - [x] `DependencyNotFoundException` should tell which `Component` lacks which `Dependency`
 - [x] component construction | constructor injection | sad | transitive dependency not found
 - [x] component construction | constructor injection | sad | self cyclic dependencies

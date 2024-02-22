@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -162,6 +163,11 @@ public class ContainerUnitTest {
 
                     final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
                     assertThat(exception).hasMessageContaining("found cyclic dependencies which are not allowed");
+
+                    final List<Class<?>> classes = exception.getComponentTypes();
+                    assertThat(classes)
+                            .hasSize(2)
+                            .containsExactlyInAnyOrder(Component.class, Dependency.class);
                 }
 
                 @Test
