@@ -31,6 +31,7 @@ class DependentedOnDependency implements Dependency {
 class DependencyB implements Dependency {
     AnotherDependency anotherDependency;
 
+    @Inject
     public DependencyB(AnotherDependency anotherDependency) {
         this.anotherDependency = anotherDependency;
     }
