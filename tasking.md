@@ -1,4 +1,5 @@
 ## Bird View
+
 - [x] no need for the container to construct: instance
 - [ ] need for the container to construct: via constructor
 - [ ] need for the container to construct: via field injection
@@ -6,6 +7,7 @@
 
 ## 02-22
 
+- [ ] tell which dep causes cyclic dep
 - [x] `DependencyNotFoundException` should tell which `Component` lacks which `Dependency`
 - [x] component construction | constructor injection | sad | transitive dependency not found
 - [x] component construction | constructor injection | sad | self cyclic dependencies

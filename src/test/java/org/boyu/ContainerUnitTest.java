@@ -157,9 +157,11 @@ public class ContainerUnitTest {
                     context.bind(Dependency.class, DependencyDependedOnComponent.class);
 
                     // when + then
-                    assertThatThrownBy(() -> context.get(Component.class))
-                            .isInstanceOf(CyclicDependenciesFoundException.class)
-                            .hasMessageContaining("found cyclic dependencies which are not allowed");
+                    final Throwable throwable = catchThrowable(() -> context.get(Component.class));
+                    assertThat(throwable).isInstanceOf(CyclicDependenciesFoundException.class);
+
+                    final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
+                    assertThat(exception).hasMessageContaining("found cyclic dependencies which are not allowed");
                 }
 
                 @Test
@@ -170,9 +172,11 @@ public class ContainerUnitTest {
                     context.bind(AnotherDependency.class, AnotherDepDependedOnComp.class);
 
                     // when + then
-                    assertThatThrownBy(() -> context.get(Component.class))
-                            .isInstanceOf(CyclicDependenciesFoundException.class)
-                            .hasMessageContaining("found cyclic dependencies which are not allowed");
+                    final Throwable throwable = catchThrowable(() -> context.get(Component.class));
+                    assertThat(throwable).isInstanceOf(CyclicDependenciesFoundException.class);
+
+                    final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
+                    assertThat(exception).hasMessageContaining("found cyclic dependencies which are not allowed");
                 }
 
                 @Test
