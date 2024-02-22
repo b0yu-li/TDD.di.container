@@ -1,7 +1,9 @@
 ## 02-22
 
-- [x] component construction | constructor injection | sad | transitive cyclic dependencies
+- [ ] DependencyNotFoundException should give a detailed message
+- [x] component construction | constructor injection | sad | transitive dependency not found
 - [x] component construction | constructor injection | sad | self cyclic dependencies
+- [x] component construction | constructor injection | sad | transitive cyclic dependencies
 
 ## 02-21
 

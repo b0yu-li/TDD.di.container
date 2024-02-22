@@ -133,6 +133,20 @@ public class ContainerUnitTest {
                 }
 
                 @Test
+                void should_throw_exception_when_get_given_transitive_dependency_not_found() {
+                    // given
+                    context.bind(Component.class, ComponentWithInjectConstructor.class);
+                    context.bind(Dependency.class, DependencyWithInjectorConstructor.class);
+
+                    // when + then
+                    final Throwable exception = catchThrowable(() -> context.get(Component.class));
+                    assertThat(exception)
+                            .isInstanceOf(DependencyNotFoundException.class)
+                            .hasMessageContaining("cannot find dependency for given implementation");
+                    assertThat(((DependencyNotFoundException) exception).getDependencyType()).isEqualTo(String.class);
+                }
+
+                @Test
                 void should_throw_exception_given_cyclic_dependencies_found() {
                     // given
                     context.bind(Component.class, ComponentWithInjectConstructor.class);
