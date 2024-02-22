@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class DependencyNotFoundException extends RuntimeException {
+    private final Class<?> componentType;
     private final Class<?> dependencyType;
 
     @Override

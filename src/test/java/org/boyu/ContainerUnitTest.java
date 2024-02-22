@@ -129,7 +129,9 @@ public class ContainerUnitTest {
                     assertThat(exception)
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
-                    assertThat(((DependencyNotFoundException) exception).getDependencyType()).isEqualTo(Dependency.class);
+                    final DependencyNotFoundException notFoundException = (DependencyNotFoundException) exception;
+                    assertThat(notFoundException.getDependencyType()).isEqualTo(Dependency.class);
+                    assertThat(notFoundException.getComponentType()).isEqualTo(Component.class);
                 }
 
                 @Test
@@ -143,7 +145,9 @@ public class ContainerUnitTest {
                     assertThat(exception)
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
-                    assertThat(((DependencyNotFoundException) exception).getDependencyType()).isEqualTo(String.class);
+                    final DependencyNotFoundException notFoundException = (DependencyNotFoundException) exception;
+                    assertThat(notFoundException.getDependencyType()).isEqualTo(String.class);
+                    assertThat(notFoundException.getComponentType()).isEqualTo(Dependency.class);
                 }
 
                 @Test
