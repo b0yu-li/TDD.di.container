@@ -24,18 +24,20 @@ public class Context {
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
         final Constructor<U> constructor = getConstructor(impl);
 
-        components.put(type, getProvider(constructor));
+        components.put(type, getProvider(type, constructor));
     }
 
-    private <U> Provider<U> getProvider(Constructor<U> constructor) {
-        return new ConstructionInjectionProvider(constructor);
+    private <T, U extends T> Provider<U> getProvider(Class<T> type, Constructor<U> constructor) {
+        return new ConstructionInjectionProvider(type, constructor);
     }
 
     class ConstructionInjectionProvider<U> implements Provider<U> {
         private boolean constructing = false;
+        private Class<?> componentType;
         private Constructor<U> constructor;
 
-        public ConstructionInjectionProvider(Constructor<U> constructor) {
+        public ConstructionInjectionProvider(Class<?> componentType, Constructor<U> constructor) {
+            this.componentType = componentType;
             this.constructor = constructor;
         }
 
@@ -47,7 +49,7 @@ public class Context {
 
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
-                        .map(typeKey -> Context.this.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(Component.class, typeKey)))
+                        .map(typeKey -> Context.this.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
                         .toArray();
                 return constructor.newInstance(objects);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
