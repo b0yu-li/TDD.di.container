@@ -5,11 +5,11 @@ import jakarta.inject.Inject;
 public interface AnotherDependency {
 }
 
-class DependencyC implements AnotherDependency {
+class AnotherDepDependedOnComp implements AnotherDependency {
     Component component;
 
     @Inject
-    public DependencyC(Component component) {
+    public AnotherDepDependedOnComp(Component component) {
         this.component = component;
     }
 

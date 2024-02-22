@@ -150,7 +150,7 @@ public class ContainerUnitTest {
                 void should_throw_exception_given_cyclic_dependencies_found() {
                     // given
                     context.bind(Component.class, ComponentWithInjectConstructor.class);
-                    context.bind(Dependency.class, DependentedOnDependency.class);
+                    context.bind(Dependency.class, DependencyDependedOnComponent.class);
 
                     // when + then
                     assertThatThrownBy(() -> context.get(Component.class))
@@ -162,8 +162,8 @@ public class ContainerUnitTest {
                 void should_throw_exception_given_transitive_cyclic_dependencies_found() {
                     // given: A -> B -> C -> A
                     context.bind(Component.class, ComponentWithInjectConstructor.class);
-                    context.bind(Dependency.class, DependencyB.class);
-                    context.bind(AnotherDependency.class, DependencyC.class);
+                    context.bind(Dependency.class, DependencyDependedOnAnotherDep.class);
+                    context.bind(AnotherDependency.class, AnotherDepDependedOnComp.class);
 
                     // when + then
                     assertThatThrownBy(() -> context.get(Component.class))
@@ -175,7 +175,7 @@ public class ContainerUnitTest {
                 void should_throw_exception_given_self_cyclic_dependencies_found() {
                     // given: A -> B -> B
                     context.bind(Component.class, ComponentWithInjectConstructor.class);
-                    context.bind(Dependency.class, DependencyBB.class);
+                    context.bind(Dependency.class, DependencyDependedOnDep.class);
 
                     // when + then
                     assertThatThrownBy(() -> context.get(Component.class))

@@ -19,30 +19,30 @@ class DependencyWithInjectorConstructor implements Dependency {
 }
 
 
-class DependentedOnDependency implements Dependency {
+class DependencyDependedOnComponent implements Dependency {
     Component component;
 
     @Inject
-    public DependentedOnDependency(Component component) {
+    public DependencyDependedOnComponent(Component component) {
         this.component = component;
     }
 }
 
-class DependencyB implements Dependency {
+class DependencyDependedOnAnotherDep implements Dependency {
     AnotherDependency anotherDependency;
 
     @Inject
-    public DependencyB(AnotherDependency anotherDependency) {
+    public DependencyDependedOnAnotherDep(AnotherDependency anotherDependency) {
         this.anotherDependency = anotherDependency;
     }
 
 }
 
-class DependencyBB implements Dependency {
+class DependencyDependedOnDep implements Dependency {
     Dependency dependency;
 
     @Inject
-    public DependencyBB(Dependency dependency) {
+    public DependencyDependedOnDep(Dependency dependency) {
         this.dependency = dependency;
     }
 }
