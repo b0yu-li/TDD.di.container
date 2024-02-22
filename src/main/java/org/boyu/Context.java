@@ -39,7 +39,9 @@ public class Context {
 
         @Override
         public U get() {
-            if (constructing) throw new CyclicDependenciesFoundException();
+            if (constructing) {
+                throw new CyclicDependenciesFoundException(componentType);
+            }
             try {
                 constructing = true;
 
@@ -48,6 +50,8 @@ public class Context {
                         .map(typeKey -> Context.this.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
                         .toArray();
                 return constructor.newInstance(objects);
+            } catch (CyclicDependenciesFoundException e) { // TODO: Write a summary of this solution re:#recursive
+                throw new CyclicDependenciesFoundException(componentType, e);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             } finally {
