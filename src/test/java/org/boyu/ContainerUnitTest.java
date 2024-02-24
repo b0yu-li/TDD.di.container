@@ -57,6 +57,22 @@ public class ContainerUnitTest {
             }
 
             @Test
+            void should_isolate_build_and_get() {
+                // given
+
+                // when
+                context.bind(Component.class, ComponentWithInjectConstructor.class);
+
+                // then
+                Container container = context.getContainer();
+                final Component actual = container.get(Component.class).get();
+                assertThat(actual)
+                        .isNotNull()
+                        .isInstanceOf(ComponentWithDefaultConstructor.class);
+            }
+
+
+            @Test
             void should_bind_type_to_a_class_with_inject_constructor() {
                 // given
                 final Dependency dependency = new Dependency() {
