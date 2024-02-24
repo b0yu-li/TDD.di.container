@@ -14,7 +14,7 @@ import java.util.*;
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
-public class ContextConfig {
+public class ContextConfig implements Context {
     private final Map<Class<?>, Provider<?>> components = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
@@ -78,6 +78,7 @@ public class ContextConfig {
                 });
     }
 
+    @Override
     public <T> Optional<T> get(Class<T> typeKey) {
         return Optional.ofNullable(components.get(typeKey))
                 .map(it -> (T) it.get());
