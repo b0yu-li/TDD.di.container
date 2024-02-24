@@ -16,15 +16,18 @@ import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONS
 
 public class ContextConfig {
     private final Map<Class<?>, Provider<?>> components = new HashMap<>();
+    private final Map<Class<?>, ComponentProvider<?>> components_ = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
         components.put(type, () -> instance);
+        components_.put(type, context -> instance);
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
         final Constructor<U> constructor = getConstructor(impl);
 
-        components.put(type, new ConstructionInjectionProvider(type, constructor));
+        components.put(type, new ConstructionInjectionProvider<>(type, constructor));
+        components_.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
     }
 
     public Context getContext() {
@@ -37,7 +40,11 @@ public class ContextConfig {
         };
     }
 
-    private class ConstructionInjectionProvider<U> implements Provider<U> {
+    private interface ComponentProvider<U> {
+        U get(Context context);
+    }
+
+    private class ConstructionInjectionProvider<U> implements Provider<U>, ComponentProvider<U> {
         private boolean constructing = false;
         private final Class<?> componentType;
         private final Constructor<U> constructor;
@@ -49,6 +56,15 @@ public class ContextConfig {
 
         @Override
         public U get() {
+            return get(getContext());
+        }
+
+        @Override
+        public U get(Context context) {
+            return getU(context);
+        }
+
+        private U getU(Context context) {
             if (constructing) {
                 throw new CyclicDependenciesFoundException(componentType);
             }
@@ -57,7 +73,7 @@ public class ContextConfig {
 
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
-                        .map(typeKey -> getContext().get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
+                        .map(typeKey -> context.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
                         .toArray();
                 return constructor.newInstance(objects);
             } catch (CyclicDependenciesFoundException e) { // TODO: Write a summary of this solution re:#recursive
