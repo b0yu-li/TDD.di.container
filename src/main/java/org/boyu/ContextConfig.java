@@ -37,7 +37,7 @@ public class ContextConfig {
         };
     }
 
-    class ConstructionInjectionProvider<U> implements Provider<U> {
+    private class ConstructionInjectionProvider<U> implements Provider<U> {
         private boolean constructing = false;
         private final Class<?> componentType;
         private final Constructor<U> constructor;
