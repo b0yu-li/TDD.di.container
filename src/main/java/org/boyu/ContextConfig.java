@@ -31,7 +31,8 @@ public class ContextConfig implements Context {
         return new Context() {
             @Override
             public <T> Optional<T> get(Class<T> typeKey) {
-                return this.get(typeKey);
+                return Optional.ofNullable(components.get(typeKey))
+                        .map(it -> (T) it.get());
             }
         };
     }
@@ -89,7 +90,6 @@ public class ContextConfig implements Context {
 
     @Override
     public <T> Optional<T> get(Class<T> typeKey) {
-        return Optional.ofNullable(components.get(typeKey))
-                .map(it -> (T) it.get());
+        return getContext().get(typeKey);
     }
 }
