@@ -1,7 +1,6 @@
 package org.boyu;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import org.boyu.exception.CyclicDependenciesFoundException;
 import org.boyu.exception.DependencyNotFoundException;
 import org.boyu.exception.IllegalComponentException;
@@ -39,7 +38,7 @@ public class ContextConfig {
         };
     }
 
-    private class ConstructionInjectionProvider<T> implements Provider<T>, ComponentProvider<T> {
+    private class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
         private boolean constructing = false;
         private final Class<?> componentType;
         private final Constructor<T> constructor;
@@ -47,11 +46,6 @@ public class ContextConfig {
         public ConstructionInjectionProvider(Class<?> componentType, Constructor<T> constructor) {
             this.componentType = componentType;
             this.constructor = constructor;
-        }
-
-        @Override
-        public T get() {
-            return get(getContext());
         }
 
         @Override
