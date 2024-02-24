@@ -5,6 +5,11 @@
 - [ ] need for the container to construct: via field injection
 - [ ] need for the container to construct: via method injection
 
+## 02-24
+
+- [ ] refactor: split `Context` to `ContextConfig` and `IoCContainer`
+- [ ] refactor: replace Jakarta's inject Provider to the customized one
+
 ## 02-22
 
 - [x] ~~tell which dep causes cyclic dep~~ tell which components are involved in a CyclicDependenciesFoundException
