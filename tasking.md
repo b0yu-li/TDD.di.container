@@ -10,9 +10,9 @@
 - [x] refactor: split `Context` to `Context` and `ContextConfig`
 - [ ] validate inside `contextConfig.getContext()`
     - IllegalComponent (e.g. multi @Inject constructors)
-    - NotFoundDependency
+    - [x] NotFoundDependency
     - Cyclic
-- [ ] fix: `map(typeKey -> getContext()....))` creates a new Context object every time
+- [x] fix: `map(typeKey -> getContext()....))` creates a new Context object every time
     - solution: use bespoke Provider interface
 - [x] refactor: replace Jakarta's inject Provider to the customized one
 

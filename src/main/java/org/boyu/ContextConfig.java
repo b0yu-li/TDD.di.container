@@ -9,27 +9,40 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
 public class ContextConfig {
     private final Map<Class<?>, ComponentProvider<?>> providers = new HashMap<>();
+    private final Map<Class<?>, List<Class<?>>> dependencies = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
         providers.put(type, context -> instance);
+        dependencies.put(type, List.of());
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
         final Constructor<U> constructor = getConstructor(impl);
 
         // TODO: HOW weird is it that the code below wouldn't work!
-        // components_.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
+        // providers.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
         providers.put(type, new ConstructionInjectionProvider<>(type, constructor));
+        dependencies.put(type, Arrays.stream(constructor.getParameters())
+                .map(Parameter::getType)
+                .collect(Collectors.toList()));
     }
 
     public Context getContext() {
         // TODO: should check all the dependencies are there
+        for (Class<?> key : dependencies.keySet()) {
+            for (Class<?> dependency : dependencies.get(key)) {
+                if (!providers.containsKey(dependency)) {
+                    throw new DependencyNotFoundException(key, dependency);
+                }
+            }
+        }
 
         return new Context() {
             @Override
