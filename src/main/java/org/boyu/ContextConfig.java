@@ -27,6 +27,15 @@ public class ContextConfig implements Context {
         components.put(type, new ConstructionInjectionProvider(type, constructor));
     }
 
+    public Context getContext() {
+        return new Context() {
+            @Override
+            public <T> Optional<T> get(Class<T> typeKey) {
+                return this.get(typeKey);
+            }
+        };
+    }
+
     class ConstructionInjectionProvider<U> implements Provider<U> {
         private boolean constructing = false;
         private final Class<?> componentType;
