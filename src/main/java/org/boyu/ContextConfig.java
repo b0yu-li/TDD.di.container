@@ -15,29 +15,25 @@ import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_C
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
 public class ContextConfig {
-    private final Map<Class<?>, Provider<?>> components = new HashMap<>();
-    private final Map<Class<?>, ComponentProvider<?>> components_ = new HashMap<>();
+    private final Map<Class<?>, ComponentProvider<?>> providers = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
-        components.put(type, () -> instance);
-        components_.put(type, context -> instance);
+        providers.put(type, context -> instance);
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
         final Constructor<U> constructor = getConstructor(impl);
 
-        components.put(type, new ConstructionInjectionProvider<>(type, constructor));
-
         // TODO: HOW weird is it that the code below wouldn't work!
         // components_.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
-        components_.put(type, new ConstructionInjectionProvider<>(type, constructor));
+        providers.put(type, new ConstructionInjectionProvider<>(type, constructor));
     }
 
     public Context getContext() {
         return new Context() {
             @Override
             public <T> Optional<T> get(Class<T> typeKey) {
-                return Optional.ofNullable(components_.get(typeKey))
+                return Optional.ofNullable(providers.get(typeKey))
                         .map(it -> (T) it.get(this));
             }
         };
