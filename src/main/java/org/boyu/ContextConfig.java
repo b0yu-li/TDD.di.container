@@ -43,23 +43,23 @@ public class ContextConfig {
         };
     }
 
-    private class ConstructionInjectionProvider<U> implements Provider<U>, ComponentProvider<U> {
+    private class ConstructionInjectionProvider<T> implements Provider<T>, ComponentProvider<T> {
         private boolean constructing = false;
         private final Class<?> componentType;
-        private final Constructor<U> constructor;
+        private final Constructor<T> constructor;
 
-        public ConstructionInjectionProvider(Class<?> componentType, Constructor<U> constructor) {
+        public ConstructionInjectionProvider(Class<?> componentType, Constructor<T> constructor) {
             this.componentType = componentType;
             this.constructor = constructor;
         }
 
         @Override
-        public U get() {
+        public T get() {
             return get(getContext());
         }
 
         @Override
-        public U get(Context context) {
+        public T get(Context context) {
             if (constructing) {
                 throw new CyclicDependenciesFoundException(componentType);
             }
