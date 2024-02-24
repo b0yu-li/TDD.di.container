@@ -4,7 +4,6 @@ import org.boyu.exception.CyclicDependenciesFoundException;
 import org.boyu.exception.DependencyNotFoundException;
 import org.boyu.exception.IllegalComponentException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +36,7 @@ public class ContainerUnitTest {
                 config.bind(Component.class, instance);
 
                 // then
-                assertThat(config.get(Component.class).get()).isEqualTo(instance);
+                assertThat(config.getContext().get(Component.class).get()).isEqualTo(instance);
             }
         }
 
@@ -51,26 +50,25 @@ public class ContainerUnitTest {
                 config.bind(Component.class, ComponentWithDefaultConstructor.class);
 
                 // then
-                final Component actual = config.get(Component.class).get();
+                final Component actual = config.getContext().get(Component.class).get();
                 assertThat(actual)
                         .isNotNull()
                         .isInstanceOf(ComponentWithDefaultConstructor.class);
             }
 
-            @Disabled
             @Test
             void should_isolate_build_and_get() {
                 // given
 
                 // when
-                config.bind(Component.class, ComponentWithInjectConstructor.class);
+                config.bind(Component.class, ComponentWithDefaultConstructor.class);
 
                 // then
-//                Container container = contextConfig.getContainer();
-//                final Component actual = container.get(Component.class).get();
-//                assertThat(actual)
-//                        .isNotNull()
-//                        .isInstanceOf(ComponentWithDefaultConstructor.class);
+                Context container = config.getContext();
+                final Component actual = container.get(Component.class).get();
+                assertThat(actual)
+                        .isNotNull()
+                        .isInstanceOf(ComponentWithDefaultConstructor.class);
             }
 
 
@@ -85,7 +83,7 @@ public class ContainerUnitTest {
                 config.bind(Component.class, ComponentWithInjectConstructor.class);
 
                 // then
-                final Component actual = config.get(Component.class).get();
+                final Component actual = config.getContext().get(Component.class).get();
                 assertThat(actual)
                         .isNotNull()
                         .isInstanceOf(ComponentWithInjectConstructor.class);
@@ -103,7 +101,7 @@ public class ContainerUnitTest {
                 config.bind(Component.class, ComponentWithInjectConstructor.class);
 
                 // then
-                final Component instance = config.get(Component.class).get();
+                final Component instance = config.getContext().get(Component.class).get();
                 assertThat(instance).isNotNull();
                 final Dependency dependency = ((ComponentWithInjectConstructor) instance).getDependency();
                 assertThat(dependency).isNotNull();
@@ -114,7 +112,7 @@ public class ContainerUnitTest {
             @Test
             void should_return_empty_when_get_given_component_undefined() {
                 // when
-                Optional<Component> component = config.get(Component.class);
+                Optional<Component> component = config.getContext().get(Component.class);
 
                 // then
                 assertThat(component).isEmpty();
@@ -144,7 +142,7 @@ public class ContainerUnitTest {
                     config.bind(Component.class, ComponentWithInjectConstructor.class);
 
                     // when + then
-                    final Throwable exception = catchThrowable(() -> config.get(Component.class));
+                    final Throwable exception = catchThrowable(() -> config.getContext().get(Component.class));
                     assertThat(exception)
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
@@ -160,7 +158,7 @@ public class ContainerUnitTest {
                     config.bind(Dependency.class, DependencyWithInjectorConstructor.class);
 
                     // when + then
-                    final Throwable exception = catchThrowable(() -> config.get(Component.class));
+                    final Throwable exception = catchThrowable(() -> config.getContext().get(Component.class));
                     assertThat(exception)
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
@@ -176,7 +174,7 @@ public class ContainerUnitTest {
                     config.bind(Dependency.class, DependencyDependedOnComponent.class);
 
                     // when + then
-                    final Throwable throwable = catchThrowable(() -> config.get(Component.class));
+                    final Throwable throwable = catchThrowable(() -> config.getContext().get(Component.class));
                     assertThat(throwable).isInstanceOf(CyclicDependenciesFoundException.class);
 
                     final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
@@ -196,7 +194,7 @@ public class ContainerUnitTest {
                     config.bind(AnotherDependency.class, AnotherDepDependedOnComp.class);
 
                     // when + then
-                    final Throwable throwable = catchThrowable(() -> config.get(Component.class));
+                    final Throwable throwable = catchThrowable(() -> config.getContext().get(Component.class));
                     assertThat(throwable).isInstanceOf(CyclicDependenciesFoundException.class);
 
                     final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
@@ -215,7 +213,7 @@ public class ContainerUnitTest {
                     config.bind(Dependency.class, DependencyDependedOnDep.class);
 
                     // when + then
-                    assertThatThrownBy(() -> config.get(Component.class))
+                    assertThatThrownBy(() -> config.getContext().get(Component.class))
                             .isInstanceOf(CyclicDependenciesFoundException.class)
                             .hasMessageContaining("found cyclic dependencies which are not allowed");
                 }

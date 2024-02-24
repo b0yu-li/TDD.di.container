@@ -14,7 +14,7 @@ import java.util.*;
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
-public class ContextConfig implements Context {
+public class ContextConfig {
     private final Map<Class<?>, Provider<?>> components = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
@@ -57,7 +57,7 @@ public class ContextConfig implements Context {
 
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
-                        .map(typeKey -> ContextConfig.this.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
+                        .map(typeKey -> getContext().get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
                         .toArray();
                 return constructor.newInstance(objects);
             } catch (CyclicDependenciesFoundException e) { // TODO: Write a summary of this solution re:#recursive
@@ -88,8 +88,4 @@ public class ContextConfig implements Context {
                 });
     }
 
-    @Override
-    public <T> Optional<T> get(Class<T> typeKey) {
-        return getContext().get(typeKey);
-    }
 }
