@@ -27,21 +27,20 @@ public class ContextConfig {
         final Constructor<U> constructor = getConstructor(impl);
 
         components.put(type, new ConstructionInjectionProvider<>(type, constructor));
-        components_.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
+
+        // TODO: HOW weird is it that the code below wouldn't work!
+        // components_.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
+        components_.put(type, new ConstructionInjectionProvider<>(type, constructor));
     }
 
     public Context getContext() {
         return new Context() {
             @Override
             public <T> Optional<T> get(Class<T> typeKey) {
-                return Optional.ofNullable(components.get(typeKey))
-                        .map(it -> (T) it.get());
+                return Optional.ofNullable(components_.get(typeKey))
+                        .map(it -> (T) it.get(this));
             }
         };
-    }
-
-    private interface ComponentProvider<U> {
-        U get(Context context);
     }
 
     private class ConstructionInjectionProvider<U> implements Provider<U>, ComponentProvider<U> {
@@ -61,10 +60,6 @@ public class ContextConfig {
 
         @Override
         public U get(Context context) {
-            return getU(context);
-        }
-
-        private U getU(Context context) {
             if (constructing) {
                 throw new CyclicDependenciesFoundException(componentType);
             }
