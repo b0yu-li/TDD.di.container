@@ -29,6 +29,8 @@ public class ContextConfig {
     }
 
     public Context getContext() {
+        // TODO: should check all the dependencies are there
+
         return new Context() {
             @Override
             public <T> Optional<T> get(Class<T> typeKey) {
