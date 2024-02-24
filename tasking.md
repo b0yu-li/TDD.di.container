@@ -7,7 +7,13 @@
 
 ## 02-24
 
-- [ ] refactor: split `Context` to `ContextConfig` and `IoCContainer`
+- [x] refactor: split `Context` to `Context` and `ContextConfig`
+- [ ] validate inside `contextConfig.getContext()`
+    - IllegalComponent (e.g. multi @Inject constructors)
+    - NotFoundDependency
+    - Cyclic
+- [ ] fix: `map(typeKey -> getContext()....))` creates a new Context object every time
+    - solution: use bespoke Provider interface
 - [ ] refactor: replace Jakarta's inject Provider to the customized one
 
 ## 02-22
@@ -44,6 +50,8 @@
 
 ## Backlog
 
+- try using filed injection for `ConstructionInjectionProvider`, i.e. `Context` injected
+  to `ConstructionInjectionProvider`
 - component construction
 - dependencies selection
 - lifecycle management
