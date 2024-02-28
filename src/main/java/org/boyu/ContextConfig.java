@@ -35,7 +35,7 @@ public class ContextConfig {
 
         // TODO: HOW weird is it that the code below wouldn't work!
         // providers.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
-        providers.put(type, new ConstructionInjectionProvider<>(ConstructionInjectionProvider.getConstructor(impl)));
+        providers.put(type, createConstructionInjectionProvider(ConstructionInjectionProvider.getConstructor(impl)));
     }
 
     public Context getContext() {
@@ -60,10 +60,14 @@ public class ContextConfig {
         });
     }
 
+    public <T> ConstructionInjectionProvider<T> createConstructionInjectionProvider(Constructor<T> constructor) {
+        return new ConstructionInjectionProvider<>(constructor);
+    }
+
     private class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
         private final Constructor<T> constructor;
 
-        public ConstructionInjectionProvider(Constructor<T> constructor) {
+        private ConstructionInjectionProvider(Constructor<T> constructor) {
             this.constructor = constructor;
         }
 
