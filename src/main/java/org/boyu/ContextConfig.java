@@ -35,9 +35,7 @@ public class ContextConfig {
     }
 
     public Context getContext() {
-        for (Class<?> key : dependencies.keySet()) {
-            checkDependencies(key, new Stack<>());
-        }
+        dependencies.keySet().forEach(key -> checkDependencies(key, new Stack<>()));
 
         return new Context() {
             @Override
@@ -49,16 +47,13 @@ public class ContextConfig {
     }
 
     private void checkDependencies(Class<?> key, Stack<Class<?>> visiting) {
-        final List<Class<?>> depsInContructor = dependencies.get(key);
-        for (Class<?> dep : depsInContructor) {
+        dependencies.get(key).forEach(dep -> {
             if (!dependencies.containsKey(dep)) throw new DependencyNotFoundException(key, dep);
-
             if (visiting.contains(dep)) throw new CyclicDependenciesFoundException(visiting);
-
             visiting.push(dep);
             checkDependencies(dep, visiting);
             visiting.pop();
-        }
+        });
     }
 
     private class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
