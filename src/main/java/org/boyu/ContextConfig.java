@@ -67,6 +67,10 @@ public class ContextConfig {
     private class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
         private final Constructor<T> constructor;
 
+        public ConstructionInjectionProvider(Class<T> impl) {
+            this.constructor = getConstructor(impl);
+        }
+
         private ConstructionInjectionProvider(Constructor<T> constructor) {
             this.constructor = constructor;
         }
@@ -76,7 +80,8 @@ public class ContextConfig {
                     .filter(it -> it.isAnnotationPresent(Inject.class))
                     .toList();
 
-            if (injectConstructors.size() > 1) throw new IllegalComponentException(MULTI_INJECT_CONSTRUCTORS.getValue());
+            if (injectConstructors.size() > 1)
+                throw new IllegalComponentException(MULTI_INJECT_CONSTRUCTORS.getValue());
 
             return (Constructor<U>) injectConstructors.stream()
                     .findFirst()
