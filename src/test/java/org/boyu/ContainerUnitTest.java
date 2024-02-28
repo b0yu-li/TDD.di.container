@@ -158,7 +158,7 @@ public class ContainerUnitTest {
                     config.bind(Dependency.class, DependencyDependedOnComponent.class);
 
                     // when + then
-                    final Throwable throwable = catchThrowable(() -> config.getContext().get(Component.class));
+                    final Throwable throwable = catchThrowable(() -> config.getContext());
                     assertThat(throwable).isInstanceOf(CyclicDependenciesFoundException.class);
 
                     final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
@@ -166,8 +166,8 @@ public class ContainerUnitTest {
 
                     final List<Class<?>> classes = exception.getComponentTypes();
                     assertThat(classes)
-                            .hasSize(3)
-                            .containsExactlyInAnyOrder(Component.class, Dependency.class, Component.class);
+                            .hasSize(2)
+                            .containsExactlyInAnyOrder(Component.class, Dependency.class);
                 }
 
                 @Test
@@ -178,7 +178,7 @@ public class ContainerUnitTest {
                     config.bind(AnotherDependency.class, AnotherDepDependedOnComp.class);
 
                     // when + then
-                    final Throwable throwable = catchThrowable(() -> config.getContext().get(Component.class));
+                    final Throwable throwable = catchThrowable(() -> config.getContext());
                     assertThat(throwable).isInstanceOf(CyclicDependenciesFoundException.class);
 
                     final CyclicDependenciesFoundException exception = (CyclicDependenciesFoundException) throwable;
@@ -186,8 +186,8 @@ public class ContainerUnitTest {
 
                     final List<Class<?>> classes = exception.getComponentTypes();
                     assertThat(classes)
-                            .hasSize(4)
-                            .containsExactlyInAnyOrder(Component.class, Dependency.class, AnotherDependency.class, Component.class);
+                            .hasSize(3)
+                            .containsExactlyInAnyOrder(Component.class, Dependency.class, AnotherDependency.class);
                 }
 
                 @Test
@@ -197,7 +197,7 @@ public class ContainerUnitTest {
                     config.bind(Dependency.class, DependencyDependedOnDep.class);
 
                     // when + then
-                    assertThatThrownBy(() -> config.getContext().get(Component.class))
+                    assertThatThrownBy(() -> config.getContext())
                             .isInstanceOf(CyclicDependenciesFoundException.class)
                             .hasMessageContaining("found cyclic dependencies which are not allowed");
                 }
