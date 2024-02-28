@@ -70,7 +70,7 @@ public class ContextConfig {
             try {
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
-                        .map(typeKey -> context.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
+                        .map(typeKey -> context.get(typeKey).get())
                         .toArray();
                 return constructor.newInstance(objects);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
