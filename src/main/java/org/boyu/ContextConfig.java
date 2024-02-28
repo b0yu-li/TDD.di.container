@@ -57,7 +57,6 @@ public class ContextConfig {
     }
 
     private class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
-        private boolean constructing = false;
         private final Class<?> componentType;
         private final Constructor<T> constructor;
 
@@ -68,23 +67,14 @@ public class ContextConfig {
 
         @Override
         public T get(Context context) {
-            if (constructing) {
-                throw new CyclicDependenciesFoundException(componentType);
-            }
             try {
-                constructing = true;
-
                 final Object[] objects = Arrays.stream(constructor.getParameters())
                         .map(Parameter::getType)
                         .map(typeKey -> context.get(typeKey).orElseThrow(() -> new DependencyNotFoundException(componentType, typeKey)))
                         .toArray();
                 return constructor.newInstance(objects);
-            } catch (CyclicDependenciesFoundException e) { // TODO: Write a summary of this solution re:#recursive
-                throw new CyclicDependenciesFoundException(componentType, e);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
-            } finally {
-                constructing = false;
             }
         }
     }
