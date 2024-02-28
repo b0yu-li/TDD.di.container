@@ -35,7 +35,6 @@ public class ContextConfig {
     }
 
     public Context getContext() {
-        // TODO: should check all the dependencies are there
         for (Class<?> key : dependencies.keySet()) {
             for (Class<?> dependency : dependencies.get(key)) {
                 if (!providers.containsKey(dependency)) {

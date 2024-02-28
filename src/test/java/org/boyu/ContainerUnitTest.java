@@ -142,7 +142,7 @@ public class ContainerUnitTest {
                     config.bind(Dependency.class, DependencyWithInjectorConstructor.class);
 
                     // when + then
-                    final Throwable exception = catchThrowable(() -> config.getContext().get(Component.class));
+                    final Throwable exception = catchThrowable(() -> config.getContext());
                     assertThat(exception)
                             .isInstanceOf(DependencyNotFoundException.class)
                             .hasMessageContaining("cannot find dependency for given implementation");
