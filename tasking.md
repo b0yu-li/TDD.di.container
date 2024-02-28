@@ -5,13 +5,17 @@
 - [ ] need for the container to construct: via field injection
 - [ ] need for the container to construct: via method injection
 
+## 02-28
+
+- [ ] ...
+
 ## 02-24
 
 - [x] refactor: split `Context` to `Context` and `ContextConfig`
 - [ ] validate inside `contextConfig.getContext()`
     - IllegalComponent (e.g. multi @Inject constructors)
     - [x] NotFoundDependency
-    - Cyclic
+    - [x] Cyclic (sol. graph algo - does cyclic loop exist)
 - [x] fix: `map(typeKey -> getContext()....))` creates a new Context object every time
     - solution: use bespoke Provider interface
 - [x] refactor: replace Jakarta's inject Provider to the customized one

@@ -2,6 +2,7 @@ package org.boyu.exception;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class CyclicDependenciesFoundException extends RuntimeException {
     private List<Class<?>> componentTypes = new ArrayList<>();
@@ -13,6 +14,10 @@ public class CyclicDependenciesFoundException extends RuntimeException {
     public CyclicDependenciesFoundException(Class<?> componentType, CyclicDependenciesFoundException e) {
         this.componentTypes.add(componentType);
         this.componentTypes.addAll(e.getComponentTypes());
+    }
+
+    public CyclicDependenciesFoundException(Stack<Class<?>> visiting) {
+        this.componentTypes.addAll(visiting);
     }
 
     @Override
