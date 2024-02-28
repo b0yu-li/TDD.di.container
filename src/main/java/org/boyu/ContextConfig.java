@@ -32,10 +32,9 @@ public class ContextConfig {
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
-
         // TODO: HOW weird is it that the code below wouldn't work!
         // providers.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
-        providers.put(type, createConstructionInjectionProvider(ConstructionInjectionProvider.getConstructor(impl)));
+        providers.put(type, new ConstructionInjectionProvider<>(impl));
     }
 
     public Context getContext() {
