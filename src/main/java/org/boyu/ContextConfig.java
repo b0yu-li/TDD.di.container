@@ -32,11 +32,10 @@ public class ContextConfig {
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
-        final Constructor<U> constructor = getConstructor(impl);
 
         // TODO: HOW weird is it that the code below wouldn't work!
         // providers.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
-        providers.put(type, new ConstructionInjectionProvider<>(constructor));
+        providers.put(type, new ConstructionInjectionProvider<>(ConstructionInjectionProvider.getConstructor(impl)));
     }
 
     public Context getContext() {
@@ -68,6 +67,24 @@ public class ContextConfig {
             this.constructor = constructor;
         }
 
+        private static <U> Constructor<U> getConstructor(Class<U> impl) {
+            final List<Constructor<?>> injectConstructors = Arrays.stream(impl.getConstructors())
+                    .filter(it -> it.isAnnotationPresent(Inject.class))
+                    .toList();
+
+            if (injectConstructors.size() > 1) throw new IllegalComponentException(MULTI_INJECT_CONSTRUCTORS.getValue());
+
+            return (Constructor<U>) injectConstructors.stream()
+                    .findFirst()
+                    .orElseGet(() -> {
+                        try {
+                            return impl.getConstructor();
+                        } catch (NoSuchMethodException e) {
+                            throw new IllegalComponentException(NO_PROPER_CONSTRUCTOR_FOUND.getValue());
+                        }
+                    });
+        }
+
         @Override
         public T get(Context context) {
             try {
@@ -87,24 +104,6 @@ public class ContextConfig {
                     .map(Parameter::getType)
                     .collect(Collectors.toList());
         }
-    }
-
-    private <U> Constructor<U> getConstructor(Class<U> impl) {
-        final List<Constructor<?>> injectConstructors = Arrays.stream(impl.getConstructors())
-                .filter(it -> it.isAnnotationPresent(Inject.class))
-                .toList();
-
-        if (injectConstructors.size() > 1) throw new IllegalComponentException(MULTI_INJECT_CONSTRUCTORS.getValue());
-
-        return (Constructor<U>) injectConstructors.stream()
-                .findFirst()
-                .orElseGet(() -> {
-                    try {
-                        return impl.getConstructor();
-                    } catch (NoSuchMethodException e) {
-                        throw new IllegalComponentException(NO_PROPER_CONSTRUCTOR_FOUND.getValue());
-                    }
-                });
     }
 
 }
