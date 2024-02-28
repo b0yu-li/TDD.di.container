@@ -7,7 +7,7 @@
 
 ## 02-28
 
-- [ ] ...
+- [ ] refactor: merge `dependencies` back to `providers`
 
 ## 02-24
 
