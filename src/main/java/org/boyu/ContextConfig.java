@@ -19,7 +19,17 @@ public class ContextConfig {
     private final Map<Class<?>, List<Class<?>>> dependencies = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
-        providers.put(type, context -> instance);
+        providers.put(type, new ComponentProvider<T>() {
+            @Override
+            public T get(Context context) {
+                return instance;
+            }
+
+            @Override
+            public List<Class<?>> getDependencies() {
+                return List.of();
+            }
+        });
         dependencies.put(type, List.of());
     }
 
@@ -76,6 +86,13 @@ public class ContextConfig {
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        @Override
+        public List<Class<?>> getDependencies() {
+            return Arrays.stream(constructor.getParameters())
+                    .map(Parameter::getType)
+                    .collect(Collectors.toList());
         }
     }
 
