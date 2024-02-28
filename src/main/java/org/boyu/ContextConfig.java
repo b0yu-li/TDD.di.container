@@ -16,7 +16,6 @@ import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONS
 
 public class ContextConfig {
     private final Map<Class<?>, ComponentProvider<?>> providers = new HashMap<>();
-    private final Map<Class<?>, List<Class<?>>> dependencies = new HashMap<>();
 
     public <T> void bind(Class<T> type, T instance) {
         providers.put(type, new ComponentProvider<T>() {
@@ -30,7 +29,6 @@ public class ContextConfig {
                 return List.of();
             }
         });
-        dependencies.put(type, List.of());
     }
 
     public <T, U extends T> void bind(Class<T> type, Class<U> impl) {
@@ -39,13 +37,10 @@ public class ContextConfig {
         // TODO: HOW weird is it that the code below wouldn't work!
         // providers.put(type, context -> new ConstructionInjectionProvider<>(type, constructor));
         providers.put(type, new ConstructionInjectionProvider<>(type, constructor));
-        dependencies.put(type, Arrays.stream(constructor.getParameters())
-                .map(Parameter::getType)
-                .collect(Collectors.toList()));
     }
 
     public Context getContext() {
-        dependencies.keySet().forEach(key -> checkDependencies(key, new Stack<>()));
+        providers.keySet().forEach(key -> checkDependencies(key, new Stack<>()));
 
         return new Context() {
             @Override
@@ -57,8 +52,8 @@ public class ContextConfig {
     }
 
     private void checkDependencies(Class<?> key, Stack<Class<?>> visiting) {
-        dependencies.get(key).forEach(dep -> {
-            if (!dependencies.containsKey(dep)) throw new DependencyNotFoundException(key, dep);
+        providers.get(key).getDependencies().forEach(dep -> {
+            if (!providers.containsKey(dep)) throw new DependencyNotFoundException(key, dep);
             if (visiting.contains(dep)) throw new CyclicDependenciesFoundException(visiting);
             visiting.push(dep);
             checkDependencies(dep, visiting);
