@@ -10,6 +10,9 @@ repositories {
 }
 
 dependencies {
+    // Mockito
+    testImplementation("org.mockito:mockito-core:3.11.2")
+
     // JSR 330
     implementation("jakarta.inject:jakarta.inject-api:2.0.0")
     annotationProcessor("org.glassfish:javax.annotation:10.0-b28")

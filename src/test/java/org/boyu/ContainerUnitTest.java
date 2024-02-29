@@ -6,6 +6,7 @@ import org.boyu.exception.IllegalComponentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
+import static org.mockito.BDDMockito.given;
 
 public class ContainerUnitTest {
     private ContextConfig config;
@@ -221,6 +223,22 @@ public class ContainerUnitTest {
                 assertThat(component.getDependency()).isSameAs(instance);
             }
 
+            @Test
+            void should_create_component_with_injection_field() {
+                // given
+                Context context = Mockito.mock(Context.class); // stub
+                Dependency dependency = Mockito.mock(Dependency.class); // stub
+                given(context.get(Dependency.class))
+                        .willReturn(Optional.of(dependency));
+
+                final ConstructionInjectionProvider<ComponentWithInjectConstructor> provider = new ConstructionInjectionProvider<>(ComponentWithInjectConstructor.class);
+
+                // when
+                final ComponentWithInjectConstructor component = provider.get(context);
+
+                // then
+                assertThat(component.getDependency()).isSameAs(dependency);
+            }
 
             // TODO: exception if dependency not found
             // TODO: exception if cyclic dependency found
