@@ -5,9 +5,13 @@
 - [ ] need for the container to construct: via field injection
 - [ ] need for the container to construct: via method injection
 
+## 02-29
+
+- [ ] ...
+
 ## 02-28
 
-- [ ] refactor: merge `dependencies` back to `providers`
+- [x] refactor: merge `dependencies` back to `providers`
 
 ## 02-24
 
