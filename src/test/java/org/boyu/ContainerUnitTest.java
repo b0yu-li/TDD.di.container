@@ -203,6 +203,14 @@ public class ContainerUnitTest {
                 }
             }
         }
+
+        @Nested
+        class FieldInjection {
+            // TODO: inject field
+            // TODO: exception if dependency not found
+            // TODO: exception if cyclic dependency found
+            // TODO: exception if `final` field (final means filed could only be injected via constructor)
+        }
     }
 
     @Nested
