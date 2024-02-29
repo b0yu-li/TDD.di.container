@@ -37,3 +37,12 @@ class ComponentWithNoInjectNorDefaultConstructor implements Component {
     public ComponentWithNoInjectNorDefaultConstructor(String dep1) {
     }
 }
+
+class ComponentWithFieldInjection {
+    @Inject
+    private Dependency dependency;
+
+    public Dependency getDependency() {
+        return dependency;
+    }
+}

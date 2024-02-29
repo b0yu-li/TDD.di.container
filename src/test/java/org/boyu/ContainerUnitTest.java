@@ -36,7 +36,7 @@ public class ContainerUnitTest {
                 config.bind(Component.class, instance);
 
                 // then
-                assertThat(config.getContext().get(Component.class).get()).isEqualTo(instance);
+                assertThat(config.getContext().get(Component.class).get()).isSameAs(instance);
             }
         }
 
@@ -206,7 +206,22 @@ public class ContainerUnitTest {
 
         @Nested
         class FieldInjection {
-            // TODO: inject field
+            @Test
+            void should_inject_dependency_via_field() {
+                // given
+                final Dependency instance = new Dependency() {
+                };
+                config.bind(Dependency.class, instance);
+                config.bind(ComponentWithFieldInjection.class, ComponentWithFieldInjection.class);
+
+                // when
+                final ComponentWithFieldInjection component = config.getContext().get(ComponentWithFieldInjection.class).get();
+
+                // then
+                assertThat(component.getDependency()).isSameAs(instance);
+            }
+
+
             // TODO: exception if dependency not found
             // TODO: exception if cyclic dependency found
             // TODO: exception if `final` field (final means filed could only be injected via constructor)
