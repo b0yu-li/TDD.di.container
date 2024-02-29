@@ -59,19 +59,11 @@ public class ContextConfig {
         });
     }
 
-    public <T> ConstructionInjectionProvider<T> createConstructionInjectionProvider(Constructor<T> constructor) {
-        return new ConstructionInjectionProvider<>(constructor);
-    }
-
     private class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
         private final Constructor<T> constructor;
 
         public ConstructionInjectionProvider(Class<T> impl) {
             this.constructor = getConstructor(impl);
-        }
-
-        private ConstructionInjectionProvider(Constructor<T> constructor) {
-            this.constructor = constructor;
         }
 
         private static <U> Constructor<U> getConstructor(Class<U> impl) {
