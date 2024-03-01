@@ -40,7 +40,7 @@ class ComponentWithNoInjectNorDefaultConstructor implements Component {
 
 class ComponentWithFieldInjection {
     @Inject
-    private Dependency dependency;
+    Dependency dependency;
 
     public Dependency getDependency() {
         return dependency;
