@@ -7,7 +7,8 @@
 
 ## 03-01
 
-- [x] should_inject_dependency_via_field
+- [x] field injection | should_inject_dependency_via_field
+- [x] field injection | should_throw_exception_when_field_has_cyclic_dependencies
 
 ## 02-28
 

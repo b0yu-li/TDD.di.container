@@ -10,6 +10,7 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
@@ -44,9 +45,14 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
 
     @Override
     public List<Class<?>> getDependencies() {
-        return Arrays.stream(injectConstructor.getParameters())
+        final List<Class<?>> depsInInjectConstructor = Arrays.stream(injectConstructor.getParameters())
                 .map(Parameter::getType)
                 .collect(Collectors.toList());
+        final List<Class<?>> depsInInjectFields = injectFields.stream()
+                .map(Field::getType)
+                .collect(Collectors.toList());
+        return Stream.concat(depsInInjectConstructor.stream(), depsInInjectFields.stream())
+                .toList();
     }
 
     private static <U> Constructor<U> getConstructor(Class<U> impl) {

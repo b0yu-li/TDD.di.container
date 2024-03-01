@@ -240,7 +240,6 @@ public class ContainerUnitTest {
                 assertThat(component.getDependency()).isSameAs(dependency);
             }
 
-            // TODO: exception if dependency not found
             @Test
             void should_throw_exception_when_field_dependency_missing() {
                 // given
@@ -267,7 +266,6 @@ public class ContainerUnitTest {
             }
 
 
-            // TODO: exception if cyclic dependency found
             @Test
             void should_throw_exception_when_field_has_cyclic_dependencies() {
                 // given
