@@ -241,6 +241,32 @@ public class ContainerUnitTest {
             }
 
             // TODO: exception if dependency not found
+            @Test
+            void should_throw_exception_when_field_dependency_missing() {
+                // given
+                config.bind(ComponentWithFieldInjection.class, ComponentWithFieldInjection.class);
+
+                // when
+                final Throwable exception = catchThrowable(() -> config.getContext());
+
+                // then
+                assertThat(exception)
+                        .isInstanceOf(DependencyNotFoundException.class)
+                        .hasMessageContaining("cannot find dependency for given implementation");
+            }
+
+            @Test
+            void should_include_field_dependency_in_dependencies() {
+                // given
+                final ConstructionInjectionProvider<ComponentWithFieldInjection> provider = new ConstructionInjectionProvider<>(ComponentWithFieldInjection.class);
+
+                // when
+
+                // then
+                assertThat(provider.getDependencies()).containsExactlyInAnyOrder(Dependency.class);
+            }
+
+
             // TODO: exception if cyclic dependency found
             // TODO: exception if `final` field (final means filed could only be injected via constructor)
         }
