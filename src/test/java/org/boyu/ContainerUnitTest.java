@@ -224,6 +224,21 @@ public class ContainerUnitTest {
             }
 
             @Test
+            void should_inject_dependency_via_superclass_inject_fields() {
+                // given
+                final Dependency instance = new Dependency() {
+                };
+                config.bind(Dependency.class, instance);
+                config.bind(SubComponentWithFieldInjection.class, SubComponentWithFieldInjection.class);
+
+                // when
+                final SubComponentWithFieldInjection component = config.getContext().get(SubComponentWithFieldInjection.class).get();
+
+                // then
+                assertThat(component.getDependency()).isSameAs(instance);
+            }
+
+            @Test
             void should_create_component_with_injection_field() {
                 // given
                 Context context = Mockito.mock(Context.class); // stub

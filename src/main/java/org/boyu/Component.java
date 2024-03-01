@@ -46,3 +46,7 @@ class ComponentWithFieldInjection {
         return dependency;
     }
 }
+
+class SubComponentWithFieldInjection extends ComponentWithFieldInjection {
+
+}
