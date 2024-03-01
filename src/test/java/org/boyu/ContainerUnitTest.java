@@ -265,7 +265,6 @@ public class ContainerUnitTest {
                 assertThat(provider.getDependencies()).containsExactlyInAnyOrder(Dependency.class);
             }
 
-
             @Test
             void should_throw_exception_when_field_has_cyclic_dependencies() {
                 // given
@@ -280,8 +279,6 @@ public class ContainerUnitTest {
                         .isInstanceOf(CyclicDependenciesFoundException.class)
                         .hasMessageContaining("found cyclic dependencies which are not allowed");
             }
-
-            // TODO: provide dependency information for field injection
 
             // TODO: exception if `final` field (final means filed could only be injected via constructor)
         }
