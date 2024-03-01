@@ -283,6 +283,8 @@ public class ContainerUnitTest {
                         .hasMessageContaining("found cyclic dependencies which are not allowed");
             }
 
+            // TODO: provide dependency information for field injection
+
             // TODO: exception if `final` field (final means filed could only be injected via constructor)
         }
     }
