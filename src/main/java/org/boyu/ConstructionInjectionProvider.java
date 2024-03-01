@@ -14,10 +14,10 @@ import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_C
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
 class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
-    private final Constructor<T> constructor;
+    private final Constructor<T> injectConstructor;
 
     public ConstructionInjectionProvider(Class<T> impl) {
-        this.constructor = getConstructor(impl);
+        this.injectConstructor = getConstructor(impl);
     }
 
     private static <U> Constructor<U> getConstructor(Class<U> impl) {
@@ -42,11 +42,11 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
     @Override
     public T get(Context context) {
         try {
-            final Object[] objects = Arrays.stream(constructor.getParameters())
+            final Object[] objects = Arrays.stream(injectConstructor.getParameters())
                     .map(Parameter::getType)
                     .map(typeKey -> context.get(typeKey).get())
                     .toArray();
-            return constructor.newInstance(objects);
+            return injectConstructor.newInstance(objects);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +54,7 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
 
     @Override
     public List<Class<?>> getDependencies() {
-        return Arrays.stream(constructor.getParameters())
+        return Arrays.stream(injectConstructor.getParameters())
                 .map(Parameter::getType)
                 .collect(Collectors.toList());
     }
