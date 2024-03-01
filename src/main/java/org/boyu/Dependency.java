@@ -46,3 +46,8 @@ class DependencyDependedOnDep implements Dependency {
         this.dependency = dependency;
     }
 }
+
+class DependencyWithFieldInjection implements Dependency {
+    @Inject
+    ComponentWithFieldInjection component;
+}

@@ -268,6 +268,21 @@ public class ContainerUnitTest {
 
 
             // TODO: exception if cyclic dependency found
+            @Test
+            void should_throw_exception_when_field_has_cyclic_dependencies() {
+                // given
+                config.bind(ComponentWithFieldInjection.class, ComponentWithFieldInjection.class);
+                config.bind(Dependency.class, DependencyWithFieldInjection.class);
+
+                // when
+                final Throwable exception = catchThrowable(() -> config.getContext());
+
+                // then
+                assertThat(exception)
+                        .isInstanceOf(CyclicDependenciesFoundException.class)
+                        .hasMessageContaining("found cyclic dependencies which are not allowed");
+            }
+
             // TODO: exception if `final` field (final means filed could only be injected via constructor)
         }
     }
