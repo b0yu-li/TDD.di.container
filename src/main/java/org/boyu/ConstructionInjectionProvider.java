@@ -6,6 +6,7 @@ import org.boyu.exception.IllegalComponentException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,10 +20,12 @@ import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONS
 class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
     private final Constructor<T> injectConstructor;
     private final List<Field> injectFields;
+    private final List<Method> injectMethods;
 
     public ConstructionInjectionProvider(Class<T> impl) {
         this.injectConstructor = getConstructor(impl);
         this.injectFields = getInjectFields(impl);
+        this.injectMethods = getInjectMethods(impl);
     }
 
     @Override
@@ -33,9 +36,14 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
                     .map(typeKey -> context.get(typeKey).get())
                     .toArray();
             final T instance = injectConstructor.newInstance(objects);
+
             for (Field field : injectFields) {
                 final Object fieldInstance = context.get(field.getType()).get();
                 field.set(instance, fieldInstance);
+            }
+
+            for (Method method : injectMethods) {
+                method.invoke(instance);
             }
 
             return instance;
@@ -89,5 +97,11 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
         }
 
         return injectFields;
+    }
+
+    private static <T> List<Method> getInjectMethods(Class<T> impl) {
+        return Arrays.stream(impl.getDeclaredMethods())
+                .filter(it -> it.isAnnotationPresent(Inject.class))
+                .toList();
     }
 }

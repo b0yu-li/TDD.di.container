@@ -7,7 +7,7 @@
 
 ## 03-04
 
-- [ ] method injection | method will be called anyway
+- [x] method injection | method will be called anyway
 
 ## 03-01
 
