@@ -329,6 +329,19 @@ public class ContainerUnitTest {
                 assertThat(component.dependency).isSameAs(dependency);
             }
 
+            @Test
+            void should_include_dependencies_from_inject_methods() {
+                // given
+                final ConstructionInjectionProvider<InjectMethodWithDependency> provider = new ConstructionInjectionProvider<>(InjectMethodWithDependency.class);
+
+                // when
+                final List<Class<?>> dependencies = provider.getDependencies();
+
+                // then
+                assertThat(dependencies).containsExactlyInAnyOrder(Dependency.class);
+            }
+
+
         }
     }
 
