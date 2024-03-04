@@ -68,3 +68,21 @@ class InjectMethodWithDependency {
         this.dependency = dependency;
     }
 }
+
+class SuperWithInjectMethod {
+    boolean superCalled = false;
+
+    @Inject
+    public void install() {
+        superCalled = true;
+    }
+}
+
+class SubWithInjectMethod extends SuperWithInjectMethod {
+    boolean subCalled = false;
+
+    @Inject
+    public void installAnother() {
+        subCalled = true;
+    }
+}

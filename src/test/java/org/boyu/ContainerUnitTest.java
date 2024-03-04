@@ -341,6 +341,18 @@ public class ContainerUnitTest {
                 assertThat(dependencies).containsExactlyInAnyOrder(Dependency.class);
             }
 
+            @Test
+            void should_inject_dependencies_via_inject_method_from_super_class() {
+                // given
+                config.bind(SubWithInjectMethod.class, SubWithInjectMethod.class);
+
+                // when
+                final SubWithInjectMethod sub = config.getContext().get(SubWithInjectMethod.class).get();
+
+                // then
+                assertThat(sub.superCalled).isTrue();
+                assertThat(sub.subCalled).isTrue();
+            }
 
         }
     }
