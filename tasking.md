@@ -5,6 +5,10 @@
 - [x] need for the container to construct: via field injection
 - [ ] need for the container to construct: via method injection
 
+## 03-04
+
+- [ ] method injection | method will be called anyway
+
 ## 03-01
 
 - [x] field injection | should_inject_dependency_via_field

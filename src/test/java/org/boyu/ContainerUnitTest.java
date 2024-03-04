@@ -297,6 +297,22 @@ public class ContainerUnitTest {
 
             // TODO: exception if `final` field (final means filed could only be injected via constructor)
         }
+
+        @Nested
+        class MethodInjection {
+            @Test
+            void should_call_inject_method_even_if_no_dependency_declared() {
+                // given
+                config.bind(InjectMethodWithNoDependency.class, InjectMethodWithNoDependency.class);
+
+                // when
+                final InjectMethodWithNoDependency component = config.getContext().get(InjectMethodWithNoDependency.class).get();
+
+                // then
+                assertThat(component.called).isTrue();
+            }
+
+        }
     }
 
     @Nested

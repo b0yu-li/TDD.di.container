@@ -50,3 +50,12 @@ class ComponentWithFieldInjection {
 class SubComponentWithFieldInjection extends ComponentWithFieldInjection {
 
 }
+
+class InjectMethodWithNoDependency {
+    boolean called = false;
+
+    @Inject
+    void install() {
+        this.called = true;
+    }
+}
