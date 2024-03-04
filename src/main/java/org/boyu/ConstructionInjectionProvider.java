@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -63,7 +64,15 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
         final List<Class<?>> depsInInjectFields = injectFields.stream()
                 .map(Field::getType)
                 .collect(Collectors.toList());
-        return Stream.concat(depsInInjectConstructor.stream(), depsInInjectFields.stream())
+
+        final List<Class<?>> depsInInjectMethods = injectMethods.stream()
+                .map(it -> Arrays.stream(it.getParameterTypes()).toList())
+                .flatMap(Collection::stream)
+                .toList();
+
+        return Stream.concat(
+                        Stream.concat(depsInInjectConstructor.stream(), depsInInjectFields.stream()),
+                        depsInInjectMethods.stream())
                 .toList();
     }
 
