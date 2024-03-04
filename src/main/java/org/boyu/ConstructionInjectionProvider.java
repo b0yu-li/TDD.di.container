@@ -43,7 +43,10 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
             }
 
             for (Method method : injectMethods) {
-                method.invoke(instance);
+                final Object[] args = Arrays.stream(method.getParameterTypes())
+                        .map(clz -> context.get(clz).get())
+                        .toArray();
+                method.invoke(instance, args);
             }
 
             return instance;
