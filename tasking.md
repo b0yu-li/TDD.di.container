@@ -8,6 +8,7 @@
 ## 03-04
 
 - [x] method injection | method will be called anyway
+- [ ] method injection | dependency could be injected via method injection
 
 ## 03-01
 

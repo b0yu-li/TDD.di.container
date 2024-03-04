@@ -11,7 +11,9 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 import static org.mockito.BDDMockito.given;
@@ -310,6 +312,21 @@ public class ContainerUnitTest {
 
                 // then
                 assertThat(component.called).isTrue();
+            }
+
+            @Test
+            void should_inject_dependency_via_inject_method() {
+                // given
+                final Dependency dependency = new Dependency() {
+                };
+                config.bind(Dependency.class, dependency);
+                config.bind(InjectMethodWithDependency.class, InjectMethodWithDependency.class);
+
+                // when
+                final InjectMethodWithDependency component = config.getContext().get(InjectMethodWithDependency.class).get();
+
+                // then
+                assertThat(component.dependency).isSameAs(dependency);
             }
 
         }

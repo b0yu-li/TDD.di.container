@@ -59,3 +59,12 @@ class InjectMethodWithNoDependency {
         this.called = true;
     }
 }
+
+class InjectMethodWithDependency {
+    Dependency dependency;
+
+    @Inject
+    void install(Dependency dependency) {
+        this.dependency = dependency;
+    }
+}
