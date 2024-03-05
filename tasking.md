@@ -8,6 +8,9 @@
 ## 03-05
 
 - [x] method injection | could invoke super classes' injected methods in order
+- [ ] method injection | sub overrides super | both annotated -> sub overrides super
+- [ ] method injection | sub overrides super | super annotated while sub was not -> shall not inject for sub
+- [ ] method injection | sub overrides super | super not annotated while sub was -> shall inject for sub
 
 ## 03-04
 
