@@ -71,18 +71,22 @@ class InjectMethodWithDependency {
 
 class SuperWithInjectMethod {
     boolean superCalled = false;
+    int superSn = 0;
 
     @Inject
     public void install() {
         superCalled = true;
+        superSn += 1;
     }
 }
 
 class SubWithInjectMethod extends SuperWithInjectMethod {
     boolean subCalled = false;
+    int subSn = 0;
 
     @Inject
     public void installAnother() {
         subCalled = true;
+        subSn = superSn + 1;
     }
 }

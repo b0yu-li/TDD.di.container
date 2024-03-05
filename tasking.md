@@ -7,7 +7,7 @@
 
 ## 03-05
 
-- [x] method injection | could invoke super classes' injected methods
+- [ ] method injection | could invoke super classes' injected methods in order
 
 ## 03-04
 

@@ -342,7 +342,7 @@ public class ContainerUnitTest {
             }
 
             @Test
-            void should_inject_dependencies_via_inject_method_from_super_class() {
+            void should_inject_dependencies_via_inject_method_from_super_class_and_being_invoked_in_order() {
                 // given
                 config.bind(SubWithInjectMethod.class, SubWithInjectMethod.class);
 
@@ -351,7 +351,9 @@ public class ContainerUnitTest {
 
                 // then
                 assertThat(sub.superCalled).isTrue();
+                assertThat(sub.superSn).isEqualTo(1);
                 assertThat(sub.subCalled).isTrue();
+                assertThat(sub.subSn).isEqualTo(2);
             }
 
         }
