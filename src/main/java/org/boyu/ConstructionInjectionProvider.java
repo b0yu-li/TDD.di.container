@@ -118,6 +118,7 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
         while (current != Object.class) {
             final List<Method> methodsOfCurrentClass = Arrays.stream(current.getDeclaredMethods())
                     .filter(it -> it.isAnnotationPresent(Inject.class))
+                    .filter(sup -> methods.stream().noneMatch(sub -> sup.getName().equals(sub.getName()) && Arrays.equals(sup.getParameterTypes(), sub.getParameterTypes())))
                     .toList();
             methods.addAll(methodsOfCurrentClass);
 
