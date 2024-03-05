@@ -119,6 +119,20 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
             final List<Method> methodsOfCurrentClass = Arrays.stream(current.getDeclaredMethods())
                     .filter(it -> it.isAnnotationPresent(Inject.class))
                     .filter(sup -> methods.stream().noneMatch(sub -> sup.getName().equals(sub.getName()) && Arrays.equals(sup.getParameterTypes(), sub.getParameterTypes())))
+                    .filter(sup -> {
+                        final List<Method> sameMethodsInMostSub = Arrays.stream(impl.getDeclaredMethods())
+                                .filter(mostSub -> mostSub.getName().equals(sup.getName()))
+                                .filter(mostSub -> Arrays.equals(mostSub.getParameterTypes(), sup.getParameterTypes()))
+                                .toList();
+
+                        final boolean subExplicitlyUnWantInjection = sameMethodsInMostSub.stream()
+                                .noneMatch(m -> m.isAnnotationPresent(Inject.class));
+
+                        if (subExplicitlyUnWantInjection) {
+                            return false;
+                        }
+                        return true;
+                    })
                     .toList();
             methods.addAll(methodsOfCurrentClass);
 
