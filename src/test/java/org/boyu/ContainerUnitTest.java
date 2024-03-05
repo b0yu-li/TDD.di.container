@@ -356,6 +356,18 @@ public class ContainerUnitTest {
                 assertThat(sub.subSn).isEqualTo(2);
             }
 
+            @Test
+            void should_only_call_once_if_sub_overrides_super_inject_method_with_inject() {
+                // given
+                config.bind(SubOverridesSuperWithInjectMethod.class, SubOverridesSuperWithInjectMethod.class);
+
+                // when
+                final SubOverridesSuperWithInjectMethod sub = config.getContext().get(SubOverridesSuperWithInjectMethod.class).get();
+
+                // then
+                assertThat(sub.superSn).isEqualTo(1);
+            }
+
         }
     }
 

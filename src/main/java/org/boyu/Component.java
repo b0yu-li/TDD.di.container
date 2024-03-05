@@ -90,3 +90,11 @@ class SubWithInjectMethod extends SuperWithInjectMethod {
         subSn = superSn + 1;
     }
 }
+
+class SubOverridesSuperWithInjectMethod extends SuperWithInjectMethod {
+    @Inject
+    @Override
+    public void install() {
+        super.install();
+    }
+}
