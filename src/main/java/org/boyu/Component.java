@@ -80,6 +80,14 @@ class SuperWithInjectMethod {
     }
 }
 
+class SuperWithNoInjectMethod {
+    int superSn = 0;
+
+    public void install() {
+        superSn += 1;
+    }
+}
+
 class SubWithInjectMethod extends SuperWithInjectMethod {
     boolean subCalled = false;
     int subSn = 0;
@@ -106,3 +114,10 @@ class SubOverridesSuperWithNoInjectMethod extends SuperWithInjectMethod {
     }
 }
 
+class SubOverridesNoInjectMethodSuperWithInjectMethod extends SuperWithNoInjectMethod {
+    @Inject
+    @Override
+    public void install() {
+        super.install();
+    }
+}

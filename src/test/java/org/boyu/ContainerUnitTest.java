@@ -380,6 +380,17 @@ public class ContainerUnitTest {
                 assertThat(sub.superSn).isEqualTo(0);
             }
 
+            @Test
+            void should_call_inject_method_of_sub_if_super_not_annotated_while_sub_was() {
+                // given
+                config.bind(SubOverridesNoInjectMethodSuperWithInjectMethod.class, SubOverridesNoInjectMethodSuperWithInjectMethod.class);
+
+                // when
+                final SubOverridesNoInjectMethodSuperWithInjectMethod sub = config.getContext().get(SubOverridesNoInjectMethodSuperWithInjectMethod.class).get();
+
+                // then
+                assertThat(sub.superSn).isEqualTo(1);
+            }
 
         }
     }
