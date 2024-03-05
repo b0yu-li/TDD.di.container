@@ -133,10 +133,7 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
                         final boolean subExplicitlyUnWantInjection = sameMethodsInMostSub.stream()
                                 .noneMatch(m -> m.isAnnotationPresent(Inject.class));
 
-                        if (subExplicitlyUnWantInjection) {
-                            return false;
-                        }
-                        return true;
+                        return !subExplicitlyUnWantInjection;
                     })
                     .toList();
             methods.addAll(methodsOfCurrentClass);
