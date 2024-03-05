@@ -14,6 +14,7 @@
 - [ ] constructor inj | sad path | abstract class
 - [ ] constructor inj | sad path | interface
 - [ ] field injection | sad path | `final`
+- [ ] method injection | sad path | generics
 
 ## 03-04
 

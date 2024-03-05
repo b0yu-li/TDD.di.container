@@ -29,81 +29,84 @@ public class ContainerUnitTest {
     @Nested
     class ComponentConstruction {
         @Nested
-        class BindTypeToInstance {
-            @Test
-            void should_bind_type_to_a_specific_instance() {
-                // given
-                Component instance = new Component() {
-                };
+        class ConstructorInjection {
+            @Nested
+            class BindTypeToInstance {
+                @Test
+                void should_bind_type_to_a_specific_instance() {
+                    // given
+                    Component instance = new Component() {
+                    };
 
-                // when
-                config.bind(Component.class, instance);
+                    // when
+                    config.bind(Component.class, instance);
 
-                // then
-                assertThat(config.getContext().get(Component.class).get()).isSameAs(instance);
-            }
-        }
-
-        @Nested
-        class BindTypeToClass {
-            @Test
-            void should_bind_type_to_a_class_with_default_constructor() {
-                // given
-
-                // when
-                config.bind(Component.class, ComponentWithDefaultConstructor.class);
-
-                // then
-                final Component actual = config.getContext().get(Component.class).get();
-                assertThat(actual)
-                        .isNotNull()
-                        .isInstanceOf(ComponentWithDefaultConstructor.class);
+                    // then
+                    assertThat(config.getContext().get(Component.class).get()).isSameAs(instance);
+                }
             }
 
-            @Test
-            void should_bind_type_to_a_class_with_inject_constructor() {
-                // given
-                final Dependency dependency = new Dependency() {
-                };
-                config.bind(Dependency.class, dependency);
+            @Nested
+            class BindTypeToClass {
+                @Test
+                void should_bind_type_to_a_class_with_default_constructor() {
+                    // given
 
-                // when
-                config.bind(Component.class, ComponentWithInjectConstructor.class);
+                    // when
+                    config.bind(Component.class, ComponentWithDefaultConstructor.class);
 
-                // then
-                final Component actual = config.getContext().get(Component.class).get();
-                assertThat(actual)
-                        .isNotNull()
-                        .isInstanceOf(ComponentWithInjectConstructor.class);
-                assertThat(((ComponentWithInjectConstructor) actual).getDependency())
-                        .isEqualTo(dependency);
-            }
+                    // then
+                    final Component actual = config.getContext().get(Component.class).get();
+                    assertThat(actual)
+                            .isNotNull()
+                            .isInstanceOf(ComponentWithDefaultConstructor.class);
+                }
 
-            @Test
-            void should_bind_type_to_a_class_with_inject_constructor_with_transitive_dependencies() {
-                // given
-                config.bind(Dependency.class, DependencyWithInjectorConstructor.class);
-                config.bind(String.class, "indirect dependency");
+                @Test
+                void should_bind_type_to_a_class_with_inject_constructor() {
+                    // given
+                    final Dependency dependency = new Dependency() {
+                    };
+                    config.bind(Dependency.class, dependency);
 
-                // when
-                config.bind(Component.class, ComponentWithInjectConstructor.class);
+                    // when
+                    config.bind(Component.class, ComponentWithInjectConstructor.class);
 
-                // then
-                final Component instance = config.getContext().get(Component.class).get();
-                assertThat(instance).isNotNull();
-                final Dependency dependency = ((ComponentWithInjectConstructor) instance).getDependency();
-                assertThat(dependency).isNotNull();
-                final String innerDependency = ((DependencyWithInjectorConstructor) dependency).getDependency();
-                assertThat(innerDependency).isNotNull().isEqualTo("indirect dependency");
-            }
+                    // then
+                    final Component actual = config.getContext().get(Component.class).get();
+                    assertThat(actual)
+                            .isNotNull()
+                            .isInstanceOf(ComponentWithInjectConstructor.class);
+                    assertThat(((ComponentWithInjectConstructor) actual).getDependency())
+                            .isEqualTo(dependency);
+                }
 
-            @Test
-            void should_return_empty_when_get_given_component_undefined() {
-                // when
-                Optional<Component> component = config.getContext().get(Component.class);
+                @Test
+                void should_bind_type_to_a_class_with_inject_constructor_with_transitive_dependencies() {
+                    // given
+                    config.bind(Dependency.class, DependencyWithInjectorConstructor.class);
+                    config.bind(String.class, "indirect dependency");
 
-                // then
-                assertThat(component).isEmpty();
+                    // when
+                    config.bind(Component.class, ComponentWithInjectConstructor.class);
+
+                    // then
+                    final Component instance = config.getContext().get(Component.class).get();
+                    assertThat(instance).isNotNull();
+                    final Dependency dependency = ((ComponentWithInjectConstructor) instance).getDependency();
+                    assertThat(dependency).isNotNull();
+                    final String innerDependency = ((DependencyWithInjectorConstructor) dependency).getDependency();
+                    assertThat(innerDependency).isNotNull().isEqualTo("indirect dependency");
+                }
+
+                @Test
+                void should_return_empty_when_get_given_component_undefined() {
+                    // when
+                    Optional<Component> component = config.getContext().get(Component.class);
+
+                    // then
+                    assertThat(component).isEmpty();
+                }
             }
 
             @Nested
