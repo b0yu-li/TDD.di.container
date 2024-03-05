@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -319,6 +321,27 @@ public class ContainerUnitTest {
             }
 
             // TODO: exception if `final` field (final means filed could only be injected via constructor)
+
+            @Nested
+            class SadPath {
+                static class ComponentWithFinalField {
+                    final Dependency dependency = null;
+                }
+
+                @Test
+                void spike_why_final_cannot_be_applied_to_field_injection() {
+                    // given
+                    final List<Field> fields = Arrays.stream(ComponentWithFinalField.class.getDeclaredFields()).toList();
+
+                    final Component value = new Component() {
+                    };
+
+                    // when + then
+                    final Throwable throwable = catchThrowable(() -> fields.get(0).set(new ComponentWithFieldInjection(), value));
+                    assertThat(throwable).isInstanceOf(IllegalArgumentException.class);
+                }
+            }
+
         }
 
         @Nested
