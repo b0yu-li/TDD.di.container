@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.boyu.exception.IllegalComponentException.Reason.ABSTRACT_CLASS_NOT_ALLOWED;
 import static org.boyu.exception.IllegalComponentException.Reason.MULTI_INJECT_CONSTRUCTORS;
 import static org.boyu.exception.IllegalComponentException.Reason.NO_PROPER_CONSTRUCTOR_FOUND;
 
@@ -26,6 +28,9 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
     private final List<Method> injectMethods;
 
     public ConstructionInjectionProvider(Class<T> impl) {
+        if (Modifier.isAbstract(impl.getModifiers())) {
+            throw new IllegalComponentException(ABSTRACT_CLASS_NOT_ALLOWED);
+        }
         this.injectConstructor = getConstructor(impl);
         this.injectFields = getInjectFields(impl);
         this.injectMethods = getInjectMethods(impl);

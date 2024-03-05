@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 public interface Component {
 }
 
+abstract class AbstractComponent {
+}
+
 @NoArgsConstructor
 class ComponentWithDefaultConstructor implements Component {
 }

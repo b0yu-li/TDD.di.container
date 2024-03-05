@@ -11,7 +11,7 @@
 - [x] method injection | sub overrides super | both annotated -> sub overrides super
 - [x] method injection | sub overrides super | super annotated while sub was not -> shall not inject for sub
 - [x] method injection | sub overrides super | super not annotated while sub was -> shall inject for sub only
-- [ ] constructor inj | sad path | abstract class
+- [x] constructor inj | sad path | abstract class
 - [ ] constructor inj | sad path | interface
 - [ ] field injection | sad path | `final`
 - [ ] method injection | sad path | generics
