@@ -1,6 +1,7 @@
 package org.boyu;
 
 import jakarta.inject.Inject;
+import org.apache.commons.collections4.CollectionUtils;
 import org.boyu.exception.IllegalComponentException;
 
 import java.lang.reflect.Constructor;
@@ -124,6 +125,10 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
                                 .filter(mostSub -> mostSub.getName().equals(sup.getName()))
                                 .filter(mostSub -> Arrays.equals(mostSub.getParameterTypes(), sup.getParameterTypes()))
                                 .toList();
+
+                        if (CollectionUtils.isEmpty(sameMethodsInMostSub)) {
+                            return true;
+                        }
 
                         final boolean subExplicitlyUnWantInjection = sameMethodsInMostSub.stream()
                                 .noneMatch(m -> m.isAnnotationPresent(Inject.class));
