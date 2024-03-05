@@ -368,6 +368,19 @@ public class ContainerUnitTest {
                 assertThat(sub.superSn).isEqualTo(1);
             }
 
+            @Test
+            void should_not_call_inject_method_if_override_with_no_inject() {
+                // given
+                config.bind(SubOverridesSuperWithNoInjectMethod.class, SubOverridesSuperWithNoInjectMethod.class);
+
+                // when
+                final SubOverridesSuperWithNoInjectMethod sub = config.getContext().get(SubOverridesSuperWithNoInjectMethod.class).get();
+
+                // then
+                assertThat(sub.superSn).isEqualTo(0);
+            }
+
+
         }
     }
 

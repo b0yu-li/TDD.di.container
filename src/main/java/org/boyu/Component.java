@@ -98,3 +98,11 @@ class SubOverridesSuperWithInjectMethod extends SuperWithInjectMethod {
         super.install();
     }
 }
+
+class SubOverridesSuperWithNoInjectMethod extends SuperWithInjectMethod {
+    @Override
+    public void install() {
+        super.install();
+    }
+}
+
