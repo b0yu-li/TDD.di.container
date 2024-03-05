@@ -218,6 +218,14 @@ public class ContainerUnitTest {
                             .hasMessageContaining(ABSTRACT_CLASS_NOT_ALLOWED.getValue());
                 }
 
+                @Test
+                void should_throw_exception_if_component_is_interface() {
+                    // when + then
+                    final Throwable throwable = catchThrowable(() -> new ConstructionInjectionProvider<>(Component.class));
+                    assertThat(throwable).isInstanceOf(IllegalComponentException.class)
+                            .hasMessageContaining(ABSTRACT_CLASS_NOT_ALLOWED.getValue());
+                }
+
             }
         }
 
