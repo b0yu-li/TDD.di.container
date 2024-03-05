@@ -112,8 +112,16 @@ class ConstructionInjectionProvider<T> implements ComponentProvider<T> {
     }
 
     private static <T> List<Method> getInjectMethods(Class<T> impl) {
-        return Arrays.stream(impl.getDeclaredMethods())
-                .filter(it -> it.isAnnotationPresent(Inject.class))
-                .toList();
+        List<Method> methods = new ArrayList<>();
+        Class<?> current = impl;
+        while (current != Object.class) {
+            final List<Method> methodsOfCurrentClass = Arrays.stream(current.getDeclaredMethods())
+                    .filter(it -> it.isAnnotationPresent(Inject.class))
+                    .toList();
+            methods.addAll(methodsOfCurrentClass);
+
+            current = current.getSuperclass();
+        }
+        return methods;
     }
 }
